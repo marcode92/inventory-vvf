@@ -1,0 +1,122 @@
+[
+  {
+    "cat_tipo": "Elettronica",
+    "num_inv": "INV-001",
+    "sec_pdci": "SEC-A1",
+    "denominazione": "Laptop Dell XPS 13",
+    "matricola": "DLXPS13-12345",
+    "annotazioni": "Assegnato al reparto IT",
+    "stanza": "Ufficio 101",
+    "possessori": "Mario Rossi",
+    "update": "2026-04-02T10:30:00Z",
+    "fuori_uso": "false"
+  },
+  {
+    "cat_tipo": "Arredamento",
+    "num_inv": "INV-002",
+    "sec_pdci": "SEC-B2",
+    "denominazione": "Scrivania in legno",
+    "matricola": "SCR-67890",
+    "annotazioni": "Buono stato",
+    "stanza": "Ufficio 102",
+    "possessori": "Luigi Bianchi",
+    "update": "2026-03-28T08:15:00Z",
+    "fuori_uso": "true"
+  },
+  {
+    "cat_tipo": "Elettronica",
+    "num_inv": "INV-003",
+    "sec_pdci": "SEC-A2",
+    "denominazione": "Stampante HP LaserJet",
+    "matricola": "HP-LJ-54321",
+    "annotazioni": "Da sostituire toner",
+    "stanza": "Sala stampa",
+    "possessori": "Ufficio amministrazione",
+    "update": "2026-03-30T14:45:00Z",
+    "fuori_uso": "false"
+  },
+  {
+    "cat_tipo": "Attrezzatura",
+    "num_inv": "INV-004",
+    "sec_pdci": "SEC-C1",
+    "denominazione": "Trapano Bosch",
+    "matricola": "BOS-TR-99887",
+    "annotazioni": "Non funzionante",
+    "stanza": "Magazzino",
+    "possessori": "Reparto manutenzione",
+    "update": "2026-03-20T09:00:00Z",
+    "fuori_uso": "true"
+  },
+  {
+    "cat_tipo": "Elettronica",
+    "num_inv": "INV-005",
+    "sec_pdci": "SEC-A3",
+    "denominazione": "Monitor Samsung 27\"",
+    "matricola": "SAM-MON-11223",
+    "annotazioni": "Nuovo acquisto",
+    "stanza": "Ufficio 103",
+    "possessori": "Giuseppe Verdi",
+    "update": "2026-04-01T11:00:00Z",
+    "fuori_uso": "false"
+  },
+  {
+    "cat_tipo": "Arredamento",
+    "num_inv": "INV-006",
+    "sec_pdci": "SEC-B3",
+    "denominazione": "Sedia ergonomica",
+    "matricola": "SED-44556",
+    "annotazioni": "Leggermente usurata",
+    "stanza": "Ufficio 104",
+    "possessori": "Anna Neri",
+    "update": "2026-03-25T10:20:00Z",
+    "fuori_uso": "false"
+  },
+  {
+    "cat_tipo": "Elettronica",
+    "num_inv": "INV-007",
+    "sec_pdci": "SEC-A4",
+    "denominazione": "Tablet iPad",
+    "matricola": "IPD-77889",
+    "annotazioni": "Uso direzionale",
+    "stanza": "Sala riunioni",
+    "possessori": "Direzione",
+    "update": "2026-03-29T16:10:00Z",
+    "fuori_uso": "false"
+  },
+  {
+    "cat_tipo": "Attrezzatura",
+    "num_inv": "INV-008",
+    "sec_pdci": "SEC-C2",
+    "denominazione": "Scala in alluminio",
+    "matricola": "SCA-99001",
+    "annotazioni": "Buono stato",
+    "stanza": "Magazzino",
+    "possessori": "Reparto manutenzione",
+    "update": "2026-03-18T07:45:00Z",
+    "fuori_uso": "false"
+  },
+  {
+    "cat_tipo": "Elettronica",
+    "num_inv": "INV-009",
+    "sec_pdci": "SEC-A5",
+    "denominazione": "Router Cisco",
+    "matricola": "CIS-22334",
+    "annotazioni": "Configurazione recente",
+    "stanza": "Server Room",
+    "possessori": "IT",
+    "update": "2026-04-02T09:10:00Z",
+    "fuori_uso": "false"
+  },
+  {
+    "cat_tipo": "Arredamento",
+    "num_inv": "INV-010",
+    "sec_pdci": "SEC-B4",
+    "denominazione": "Armadio archivio",
+    "matricola": "ARM-55667",
+    "annotazioni": "Da riordinare",
+    "stanza": "Archivio",
+    "possessori": "Segreteria",
+    "update": "2026-03-22T12:00:00Z",
+    "fuori_uso": "false"
+  }
+]

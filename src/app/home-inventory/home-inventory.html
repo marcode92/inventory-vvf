@@ -1,0 +1,79 @@
+
+
+<mat-card>
+  <mat-card-content [margin]="8">
+  <div class="header">
+    <div>
+      <h1>Inventario</h1>
+      <p>Gestione assets</p>
+    </div>
+  </div>
+    <div class="search">
+      <input type="text" [formControl]="searchCtrl" placeholder="Cerca..." />
+      <button>🔍</button>
+  </div>  
+</mat-card-content>
+
+  <mat-card-content  [margin]="8">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <ng-container matColumnDef="cat_tipo">
+        <th mat-header-cell *matHeaderCellDef> Cat. tipo </th>
+        <td mat-cell *matCellDef="let element"> {{element.cat_tipo}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="num_inv">
+        <th mat-header-cell *matHeaderCellDef> Num. Inv. </th>
+        <td mat-cell *matCellDef="let element"> {{element.num_inv}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="sec_pdci">
+        <th mat-header-cell *matHeaderCellDef> Sec/pdci </th>
+        <td mat-cell *matCellDef="let element"> {{element.sec_pdci}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="denominazione">
+        <th mat-header-cell *matHeaderCellDef> denominazione </th>
+        <td mat-cell *matCellDef="let element"> {{element.denominazione}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="matricola">
+        <th mat-header-cell *matHeaderCellDef> Matricola </th>
+        <td mat-cell *matCellDef="let element"> {{element.matricola}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="annotazioni">
+        <th mat-header-cell *matHeaderCellDef> Annotazioni </th>
+        <td mat-cell *matCellDef="let element"> {{element.annotazioni}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="stanza">
+        <th mat-header-cell *matHeaderCellDef> Stanza </th>
+        <td mat-cell *matCellDef="let element"> {{element.stanza}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="possessori">
+        <th mat-header-cell *matHeaderCellDef> Possessori </th>
+        <td mat-cell *matCellDef="let element"> {{element.possessori}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="update">
+        <th mat-header-cell *matHeaderCellDef> Ultimo update </th>
+        <td mat-cell *matCellDef="let element"> {{element.update | date:'dd/MM/yyyy'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="fuori_uso">
+        <th mat-header-cell *matHeaderCellDef> Fuori uso </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-checkbox [checked]="element.fuori_uso === 'true'"></mat-checkbox>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-card-content>
+  <mat-card-actions [margin]="10" align="end">
+    <button mat-raised-button color="primary" (click)="addRow()">
+      ADD
+    </button>
+  </mat-card-actions>
+</mat-card>
