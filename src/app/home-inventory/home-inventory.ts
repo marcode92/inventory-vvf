@@ -8,8 +8,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { AddMargin } from '../../directive/add-margin';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { AddItemDialog } from '../components/add-item-dialog/add-item-dialog';
+import { switchMap } from 'rxjs';
 
 
 @Component({
@@ -23,42 +24,49 @@ import { AddItemDialog } from '../components/add-item-dialog/add-item-dialog';
 
 export class HomeInventory {
 
-  constructor(private api: ServiceInventory, private dialog:MatDialog){
+  constructor(private serviceInventory: ServiceInventory, 
+    private dialog: MatDialog) {
 
   }
 
-displayedColumns: string[] = [ 
-            'cat_tipo',
-            'num_inv',
-            'sec_pdci',
-            'denominazione',
-            'matricola',
-            'annotazioni',
-            'stanza',
-            'possessori',
-            'update',
-            'fuori_uso'
-          ];
+  displayedColumns: string[] = [
+    'cat_tipo',
+    'num_inv',
+    'sec_pdci',
+    'denominazione',
+    'matricola',
+    'annotazioni',
+    'stanza',
+    'possessori',
+    'update',
+    'fuori_uso'
+  ];
 
   dataSource = new MatTableDataSource<InventoryItem>();
   searchCtrl = new FormControl('');
 
   ngOnInit() {
     this.searchCtrl.valueChanges.subscribe(value => {
-      console.log("funziona",value);
+      console.log("funziona", value);
     });
 
-    this.api.getHomeDataTable().subscribe(data => {
+    this.serviceInventory.getHomeDataTable().subscribe(data => {
       this.dataSource.data = data;
     })
   }
 
-  addRow(){
-    this.dialog.open(AddItemDialog,
+  openDialog() {
+   const dialogRef= this.dialog.open(AddItemDialog,
       {
-        width:'800px',
-        height:'35vh'
+        width: '800px',
+        height: '35vh'
       }
     );
+
+    dialogRef.afterClosed().pipe(
+      switchMap(() => this.serviceInventory.getFakeListUpdated())
+    ).subscribe(data => {
+      this.dataSource.data = data;
+    })
   }
 }

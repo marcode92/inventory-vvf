@@ -39,5 +39,5 @@
 
 <mat-dialog-actions style="justify-content: flex-end;">
     <button mat-button mat-dialog-close>Annulla</button>
-    <button mat-raised-button color="primary" (click)="Save()">Salva</button>
+    <button mat-raised-button color="primary" (click)="save()" [disabled]="loading">Salva</button>
 </mat-dialog-actions>

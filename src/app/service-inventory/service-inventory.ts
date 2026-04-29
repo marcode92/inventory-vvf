@@ -16,10 +16,16 @@ export class ServiceInventory {
     return this.http.get<InventoryItem[]>(`${this.baseUrl}/home-table.json`)
   }
 
-  /* addHomeDataTable(): Observable<InventoryItem[]> {
-    return this.http.post<InventoryItem[]>(`${this.baseUrl}/home-table.json`)
-  } */
- 
+  addHomeDataTable(itemToAdd: InventoryItem): Observable<InventoryItem[]> {
+    /* return this.http.post<InventoryItem>(`${this.baseUrl}/new-item.json`) */
+    return this.http.get<InventoryItem[]>(`${this.baseUrl}/new-item.json`)
+  }
+
+ /*remove this when real api will be up */
+  getFakeListUpdated(): Observable<InventoryItem[]> {
+    return this.http.get<InventoryItem[]>(`${this.baseUrl}/new-item.json`)
+  }
+
  /* updHomeDataTable(): Observable<InventoryItem[]> {
     return this.http.update<InventoryItem[]>(`${this.baseUrl}/home-table.json`)
   } */
