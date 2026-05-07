@@ -38,7 +38,7 @@ export class HomeInventory {
     'annotazioni',
     'stanza',
     'possessori',
-    'update',
+    'last_update',
     'fuori_uso'
   ];
 

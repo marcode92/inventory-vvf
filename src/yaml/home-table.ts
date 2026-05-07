@@ -7,6 +7,6 @@ export interface InventoryItem {
   annotazioni?: string,
   stanza?: string,
   possessori?: string,
-  update?: string,
+  last_update?: string,
   fuori_uso?: boolean,
 }

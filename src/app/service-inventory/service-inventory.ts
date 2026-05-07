@@ -8,17 +8,17 @@ import { InventoryItem } from '../../yaml/home-table';
 })
 export class ServiceInventory {
 
-  private baseUrl = '/mock'
+  private baseUrl = 'http://localhost:1337/api'
   constructor(private http:HttpClient){
 
   }
   getHomeDataTable(): Observable<InventoryItem[]> {
-    return this.http.get<InventoryItem[]>(`${this.baseUrl}/home-table.json`)
+    return this.http.get<InventoryItem[]>(`${this.baseUrl}/inventories/readlist`)
   }
 
-  addHomeDataTable(itemToAdd: InventoryItem): Observable<InventoryItem[]> {
-    /* return this.http.post<InventoryItem>(`${this.baseUrl}/new-item.json`) */
-    return this.http.get<InventoryItem[]>(`${this.baseUrl}/new-item.json`)
+  addHomeDataTable(itemToAdd: InventoryItem): Observable<InventoryItem> {
+    console.log("body:",itemToAdd)
+     return this.http.post<InventoryItem>(`${this.baseUrl}/inventories/addass`,itemToAdd)
   }
 
  /*remove this when real api will be up */
