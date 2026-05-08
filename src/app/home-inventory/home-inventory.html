@@ -1,21 +1,26 @@
 
 
-<mat-card>
-  <mat-card-content [margin]="8">
-  <div class="header">
-    <div>
-      <h1>Inventario</h1>
-      <p>Gestione assets</p>
+<mat-card class="card-container">
+  <mat-card-header [margin]="8">
+  <div class="form-container">
+    <div class="title">
+      <mat-card-title>Inventario</mat-card-title>
+      <mat-card-subtitle>Gestione assets</mat-card-subtitle>
+    </div>
+    <div class="search">
+      <mat-form-field appearence="outline">
+       <mat-label>Search</mat-label> 
+        <input matInput [formControl]="searchCtrl" />
+        <button mat-icon-button matSuffix>
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
     </div>
   </div>
-    <div class="search">
-      <input type="text" [formControl]="searchCtrl" placeholder="Cerca..." />
-      <button>🔍</button>
-  </div>  
-</mat-card-content>
-
+  </mat-card-header>
   <mat-card-content  [margin]="8">
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <div class="table-container">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 ">
       <ng-container matColumnDef="cat_tipo">
         <th mat-header-cell *matHeaderCellDef> Cat. tipo </th>
         <td mat-cell *matCellDef="let element"> {{element.cat_tipo}} </td>
@@ -70,6 +75,7 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+    </div>
   </mat-card-content>
   <mat-card-actions [margin]="10" align="end">
     <button mat-raised-button color="primary" (click)="openDialog()">

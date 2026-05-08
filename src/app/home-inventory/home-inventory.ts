@@ -11,13 +11,17 @@ import { AddMargin } from '../../directive/add-margin';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { AddItemDialog } from '../components/add-item-dialog/add-item-dialog';
 import { switchMap } from 'rxjs';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 
 
 @Component({
   selector: 'app-home-inventory',
   imports: [
     ReactiveFormsModule, CommonModule, MatTableModule,
-    MatCheckboxModule, MatButtonModule, MatCardModule, AddMargin, MatDialogModule],
+    MatCheckboxModule, MatButtonModule, MatCardModule, AddMargin, MatDialogModule,
+    MatFormField, MatLabel, MatIcon, MatInputModule],
   templateUrl: './home-inventory.html',
   styleUrl: './home-inventory.scss',
 })
@@ -64,7 +68,7 @@ export class HomeInventory {
     );
 
     dialogRef.afterClosed().pipe(
-      switchMap(() => this.serviceInventory.getFakeListUpdated())
+      switchMap(() => this.serviceInventory.getHomeDataTable())
     ).subscribe(data => {
       this.dataSource.data = data;
     })

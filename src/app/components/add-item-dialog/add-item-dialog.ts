@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { InventoryItem } from '../../../yaml/home-table';
 import { ReactiveFormsModule } from '@angular/forms';
 import dayjs from 'dayjs';
+import { switchMap, throwError } from 'rxjs';
 
 @Component({
   selector: 'add-item-dialog',
@@ -16,12 +17,13 @@ import dayjs from 'dayjs';
   styleUrl: './add-item-dialog.scss',
 })
 export class AddItemDialog {
-loading = false;
-error: string | null = null;
-itemToAdd: InventoryItem = {}
+  loading = false;
+  error: string | null = null;
+  itemToAdd: InventoryItem = {};
+  invalid_field: string = ''
 
-constructor(private dialogRef: MatDialogRef<AddItemDialog>, 
-  private serviceInventory: ServiceInventory, private snackBar: MatSnackBar ){}
+  constructor(private dialogRef: MatDialogRef<AddItemDialog>,
+    private serviceInventory: ServiceInventory, private snackBar: MatSnackBar) { }
 
   addItemForm = new FormGroup({
     cat_tipo: new FormControl(''),
@@ -33,32 +35,41 @@ constructor(private dialogRef: MatDialogRef<AddItemDialog>,
     stanza: new FormControl(''),
     possessori: new FormControl(''),
     //update: new FormControl('')    
-});
+  });
 
-save(){
-  this.itemToAdd = {
-    cat_tipo: this.addItemForm.get('cat_tipo')?.value || '',
-    num_inv: this.addItemForm.get('num_inv')?.value || '',
-    annotazioni: this.addItemForm.get('annotazioni')?.value || '',
-    denominazione: this.addItemForm.get('denominazione')?.value || '',
-    matricola: this.addItemForm.get('matricola')?.value || '',
-    possessori: this.addItemForm.get('possessori')?.value || '',
-    sec_pdci: this.addItemForm.get('sec_pdci')?.value || '', 
-    stanza: this.addItemForm.get('stanza')?.value || '',
-    last_update: dayjs().format('YYYY-MM-DD HH:mm'),
-    fuori_uso: false,
-   }
-   console.log("itemtoadd show",this.itemToAdd);
+  save() {
+    this.itemToAdd = {
+      cat_tipo: this.addItemForm.get('cat_tipo')?.value || '',
+      num_inv: this.addItemForm.get('num_inv')?.value || '',
+      annotazioni: this.addItemForm.get('annotazioni')?.value || '',
+      denominazione: this.addItemForm.get('denominazione')?.value || '',
+      matricola: this.addItemForm.get('matricola')?.value || '',
+      possessori: this.addItemForm.get('possessori')?.value || '',
+      sec_pdci: this.addItemForm.get('sec_pdci')?.value || '',
+      stanza: this.addItemForm.get('stanza')?.value || '',
+      last_update: dayjs().format('YYYY-MM-DD HH:mm'),
+      fuori_uso: false,
+    }
 
-  this.serviceInventory.addHomeDataTable(this.itemToAdd).subscribe({
-    next: (res) =>{
-      this.loading = false;
-      this.dialogRef.close(true)
-    },
-    error: (err) =>{
+
+    this.serviceInventory.readOneAss(this.itemToAdd.num_inv).pipe(
+      switchMap((res: any) => {
+        if (res && res.length > 0) {
+          this.invalid_field = 'error';
+          return throwError(() => new Error());
+        }
+        return this.serviceInventory.addHomeDataTable(this.itemToAdd);
+      }),
+    ).subscribe({
+      next: () => {
+        this.loading = false;
+        this.dialogRef.close(true)
+      },
+      error: () => {
         this.error = "errore durante il salvataggio"
         this.snackBar.open(this.error)
-    }
-  })
-}
+      }
+    })
+
+  }
 }

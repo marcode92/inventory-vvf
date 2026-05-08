@@ -1,11 +1,11 @@
-.form-display {
+.form-container {
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     gap: 16px;
 }
 
 .field {
-    display: flex;
-    flex-direction: column;
-    max-width: 300px;
+    flex: 1 1 300px;
+    min-width: 250px;
 }

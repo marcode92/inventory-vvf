@@ -21,9 +21,8 @@ export class ServiceInventory {
      return this.http.post<InventoryItem>(`${this.baseUrl}/inventories/addass`,itemToAdd)
   }
 
- /*remove this when real api will be up */
-  getFakeListUpdated(): Observable<InventoryItem[]> {
-    return this.http.get<InventoryItem[]>(`${this.baseUrl}/new-item.json`)
+  readOneAss(num_inv?:string): Observable<InventoryItem>{
+    return this.http.get<InventoryItem>(`${this.baseUrl}/inventories/readoneass?num_inv=${num_inv}`)
   }
 
  /* updHomeDataTable(): Observable<InventoryItem[]> {
