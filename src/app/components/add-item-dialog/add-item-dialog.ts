@@ -9,10 +9,12 @@ import { InventoryItem } from '../../../yaml/home-table';
 import { ReactiveFormsModule } from '@angular/forms';
 import dayjs from 'dayjs';
 import { switchMap, throwError } from 'rxjs';
+import { MatFormField } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'add-item-dialog',
-  imports: [MatDialogModule, MatButtonModule, ReactiveFormsModule],
+  imports: [MatDialogModule, MatButtonModule, ReactiveFormsModule, MatFormField, MatInputModule],
   templateUrl: './add-item-dialog.html',
   styleUrl: './add-item-dialog.scss',
 })

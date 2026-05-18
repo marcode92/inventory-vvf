@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { InventoryItem } from '../../yaml/home-table';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -27,11 +27,16 @@ import { MatInputModule } from '@angular/material/input';
 })
 
 export class HomeInventory {
+  @ViewChild('barcodeInput')
+  barcodeInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private serviceInventory: ServiceInventory, 
+  constructor(private serviceInventory: ServiceInventory,
     private dialog: MatDialog) {
 
   }
+
+  scannerBuffer = '';
+  lastKeyTime = 0;
 
   displayedColumns: string[] = [
     'cat_tipo',
@@ -60,10 +65,11 @@ export class HomeInventory {
   }
 
   openDialog() {
-   const dialogRef= this.dialog.open(AddItemDialog,
+    const dialogRef = this.dialog.open(AddItemDialog,
       {
-        width: '800px',
-        height: '35vh'
+        width: '50%',
+        maxWidth: '95vw',
+        maxHeight: '90vh'
       }
     );
 
@@ -73,4 +79,37 @@ export class HomeInventory {
       this.dataSource.data = data;
     })
   }
+
+  activateScanner() {
+    this.barcodeInput.nativeElement.focus();
+    console.log('Scanner attivo');
+  }
+
+  handleScanner = (event: KeyboardEvent) => {
+     if (event.key === 'Enter') {
+
+        // blocca enter globale
+        event.preventDefault();
+        event.stopPropagation();
+
+        // aspetta update input
+        setTimeout(() => {
+
+            const input =
+                event.target as HTMLInputElement;
+
+            const barcode = input.value;
+
+            console.log('Barcode:', barcode);
+
+            // reset
+            input.value = '';
+
+            // rifocus
+            this.barcodeInput.nativeElement.focus();
+
+        });
+    }
 }
+  };
+

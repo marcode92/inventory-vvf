@@ -1,43 +1,43 @@
 <div mat-dialog-title>ADD</div>
 
-<form [formGroup]="addItemForm" class="form-container">
-    <mat-dialog-content class="field">
-        <div class="field">
-            <label>Cat tipo</label>
-            <input type="text" formControlName="cat_tipo" />
-        </div>
-        <div class="field">
-            <label>Num inv</label>
-            <input type="text" formControlName="num_inv" />
-        </div>
-        <div class="field">
-            <label>Sec pdci</label>
-            <input type="text" formControlName="sec_pdci" />
-        </div>
-        <div class="field">
-            <label>Denominazione</label>
-            <input type="text" formControlName="denominazione" />
-        </div>
-        <div class="field">
-            <label>Matricola</label>
-            <input type="text" formControlName="matricola" />
-        </div>
-        <div class="field">
-            <label>Annotazioni</label>
-            <input type="text" formControlName="annotazioni" />
-        </div>
-        <div class="field">
-            <label>Stanza</label>
-            <input type="text" formControlName="stanza" />
-        </div>
-        <div class="field">
-            <label>Possessori</label>
-            <input type="text" formControlName="possessori" />
-        </div>
-    </mat-dialog-content>
-</form>
+<mat-dialog-content appearance="outline">
+    <form [formGroup]="addItemForm" class="form-container">
 
-<mat-dialog-actions style="justify-content: flex-end;">
+        <mat-form-field appearance="outline">
+            <mat-label>Cat tipo</mat-label>
+            <input matInput type="text" formControlName="cat_tipo" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Num Inv</mat-label>
+            <input matInput type="text" formControlName="num_inv" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Sec pdci</mat-label>
+            <input matInput type="text" formControlName="sec_pdci" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Denominazione</mat-label>
+            <input matInput type="text" formControlName="denominazione" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Matricola</mat-label>
+            <input matInput type="text" formControlName="matricola" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Annotazioni</mat-label>
+            <input matInput type="text" formControlName="annotazioni" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Stanza</mat-label>
+            <input matInput type="text" formControlName="stanza" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Possessori</mat-label>
+            <input matInput type="text" formControlName="possessori" />
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
     <button mat-button mat-dialog-close>Annulla</button>
     <button mat-raised-button color="primary" (click)="save()" [disabled]="loading">Salva</button>
 </mat-dialog-actions>

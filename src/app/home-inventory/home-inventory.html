@@ -78,6 +78,16 @@
     </div>
   </mat-card-content>
   <mat-card-actions [margin]="10" align="end">
+    <input
+    #barcodeInput
+    type="text"
+    class="scanner-input"
+    (keydown)="handleScanner($event)"
+    autocomplete="off"
+    />
+    <button mat-raised-button color="primary" (click)="activateScanner()">
+      SCAN
+    </button>
     <button mat-raised-button color="primary" (click)="openDialog()">
       ADD
     </button>

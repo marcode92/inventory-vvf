@@ -7,13 +7,15 @@
   gap: 16px;
 }
 
-.colo{
-    background-color: red;
-}
-
 .card-container {
   width: 100%;
   max-width: 100%;
+}
+
+.scanner-input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
 }
 
 @media (max-width: 600px) {
@@ -22,11 +24,5 @@
     align-items: flex-start;
   }
 
-  .search {
-    width: 100%;
-  }
 
-  .search mat-form-field {
-    width: 100%;
-  }
 }

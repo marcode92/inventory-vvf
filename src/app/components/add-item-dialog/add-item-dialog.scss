@@ -1,11 +1,15 @@
 .form-container {
     display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 0px 12px;
+    margin-top:12px;
+    width:100%;
 }
 
-.field {
-    flex: 1 1 300px;
-    min-width: 250px;
+mat-dialog-content {
+    padding: 24px;
+}
+
+mat-dialog-actions {
+    padding: 24px;
 }
