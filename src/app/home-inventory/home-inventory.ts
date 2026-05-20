@@ -9,11 +9,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { AddMargin } from '../../directive/add-margin';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { AddItemDialog } from '../components/add-item-dialog/add-item-dialog';
 import { switchMap } from 'rxjs';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { ScannerDialog } from '../scanner-dialog/scanner-dialog';
+import { AddItemDialog } from '../components/add-item-dialog/add-item-dialog';
 
 
 @Component({
@@ -64,12 +65,15 @@ export class HomeInventory {
     })
   }
 
-  openDialog() {
+  openDialog(data?: string) {
     const dialogRef = this.dialog.open(AddItemDialog,
       {
         width: '50%',
         maxWidth: '95vw',
-        maxHeight: '90vh'
+        maxHeight: '90vh',
+        data:{
+          qrCode:data
+        }
       }
     );
 
@@ -80,36 +84,20 @@ export class HomeInventory {
     })
   }
 
-  activateScanner() {
-    this.barcodeInput.nativeElement.focus();
-    console.log('Scanner attivo');
-  }
-
-  handleScanner = (event: KeyboardEvent) => {
-     if (event.key === 'Enter') {
-
-        // blocca enter globale
-        event.preventDefault();
-        event.stopPropagation();
-
-        // aspetta update input
-        setTimeout(() => {
-
-            const input =
-                event.target as HTMLInputElement;
-
-            const barcode = input.value;
-
-            console.log('Barcode:', barcode);
-
-            // reset
-            input.value = '';
-
-            // rifocus
-            this.barcodeInput.nativeElement.focus();
-
-        });
+  
+  openScanDialog() {
+      const dialogRef = this.dialog.open(ScannerDialog,
+        {
+          width: '50%',
+          maxWidth: '95vw',
+          maxHeight: '90vh',
+          
+        }
+      );
+  
+      dialogRef.afterClosed().subscribe(data => {
+        this.openDialog(data)
+      })
     }
-}
   };
 

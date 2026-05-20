@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ServiceInventory } from '../../service-inventory/service-inventory';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -25,11 +25,18 @@ export class AddItemDialog {
   invalid_field: string = ''
 
   constructor(private dialogRef: MatDialogRef<AddItemDialog>,
-    private serviceInventory: ServiceInventory, private snackBar: MatSnackBar) { }
+    private serviceInventory: ServiceInventory, private snackBar: MatSnackBar, 
+    @Inject(MAT_DIALOG_DATA) public data:any) { }
 
+    param?: string;
+    
+    ngOnInit(){
+      console.log("stampa qrcode",this.data.qrCode)
+      this.param = this.data.qrCode
+    }
   addItemForm = new FormGroup({
     cat_tipo: new FormControl(''),
-    num_inv: new FormControl(''),
+    num_inv: new FormControl(this.param? this.param: ''),
     sec_pdci: new FormControl(''),
     denominazione: new FormControl(''),
     matricola: new FormControl(''),
