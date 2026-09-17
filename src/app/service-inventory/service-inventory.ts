@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { InventoryItem } from '../../yaml/home-table';
+import { AssetType, InventoryItem } from '../../yaml/home-table';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +14,10 @@ export class ServiceInventory {
   }
   getHomeDataTable(): Observable<InventoryItem[]> {
     return this.http.get<InventoryItem[]>(`${this.baseUrl}/inventories/readlist`)
+  }
+
+  createAssetType(body:AssetType): Observable<AssetType>{
+    return this.http.post<AssetType>(`${this.baseUrl}/inventories/type`,body)
   }
 
   addHomeDataTable(itemToAdd: InventoryItem): Observable<InventoryItem> {

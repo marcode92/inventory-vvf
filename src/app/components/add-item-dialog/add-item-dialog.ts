@@ -11,17 +11,22 @@ import dayjs from 'dayjs';
 import { switchMap, throwError } from 'rxjs';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { TechItem } from './tech-item/tech-item';
+import { InvItem } from './inv-item/inv-item';
+import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'add-item-dialog',
-  imports: [MatDialogModule, MatButtonModule, ReactiveFormsModule, MatFormField, MatInputModule],
+  imports: [MatDialogModule, MatButtonModule, ReactiveFormsModule, 
+    TechItem,InvItem, MatFormField, MatInputModule, MatIconModule, CommonModule],
   templateUrl: './add-item-dialog.html',
   styleUrl: './add-item-dialog.scss',
 })
 export class AddItemDialog {
   loading = false;
   error: string | null = null;
-  itemToAdd: InventoryItem = {};
+  //itemToAdd: InventoryItem = {};
   invalid_field: string = ''
 
   constructor(private dialogRef: MatDialogRef<AddItemDialog>,
@@ -29,22 +34,12 @@ export class AddItemDialog {
     @Inject(MAT_DIALOG_DATA) public data:any) { }
 
     param?: string;
-    
-    ngOnInit(){
+    currentPage: boolean = true;
+   /*  ngOnInit(){
       console.log("stampa qrcode",this.data.qrCode)
       this.param = this.data.qrCode
     }
-  addItemForm = new FormGroup({
-    cat_tipo: new FormControl(''),
-    num_inv: new FormControl(this.param? this.param: ''),
-    sec_pdci: new FormControl(''),
-    denominazione: new FormControl(''),
-    matricola: new FormControl(''),
-    annotazioni: new FormControl(''),
-    stanza: new FormControl(''),
-    possessori: new FormControl(''),
-    //update: new FormControl('')    
-  });
+ 
 
   save() {
     this.itemToAdd = {
@@ -80,5 +75,9 @@ export class AddItemDialog {
       }
     })
 
-  }
+  } */
+
+    changePage(){
+      this.currentPage = !this.currentPage;
+    }
 }

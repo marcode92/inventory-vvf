@@ -1,0 +1,15 @@
+.form-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0px 12px;
+    margin-top:12px;
+    width:100%;
+}
+
+mat-dialog-content {
+    padding: 24px;
+}
+
+mat-dialog-actions {
+    padding: 24px;
+}

@@ -15,6 +15,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ScannerDialog } from '../scanner-dialog/scanner-dialog';
 import { AddItemDialog } from '../components/add-item-dialog/add-item-dialog';
+import { ModelDialog } from '../components/asset model/model-dialog/model-dialog';
 
 
 @Component({
@@ -71,8 +72,8 @@ export class HomeInventory {
         width: '50%',
         maxWidth: '95vw',
         maxHeight: '90vh',
-        data:{
-          qrCode:data
+        data: {
+          qrCode: data
         }
       }
     );
@@ -84,20 +85,37 @@ export class HomeInventory {
     })
   }
 
-  
+
   openScanDialog() {
-      const dialogRef = this.dialog.open(ScannerDialog,
-        {
-          width: '50%',
-          maxWidth: '95vw',
-          maxHeight: '90vh',
-          
-        }
-      );
-  
-      dialogRef.afterClosed().subscribe(data => {
-        this.openDialog(data)
-      })
-    }
-  };
+    const dialogRef = this.dialog.open(ScannerDialog,
+      {
+        width: '50%',
+        maxWidth: '95vw',
+        maxHeight: '90vh',
+
+      }
+    );
+
+    dialogRef.afterClosed().subscribe(data => {
+      this.openDialog(data)
+    })
+  }
+
+  openModelDialog() {
+    const dialogRef = this.dialog.open(ModelDialog,
+      {
+        width: '900px',
+        maxWidth: '95vw',
+        maxHeight: '90vh'
+
+      }
+    );
+
+    dialogRef.afterClosed().pipe(
+      switchMap(() => this.serviceInventory.getHomeDataTable())
+    ).subscribe(data => {
+      this.dataSource.data = data;
+    })
+  }
+};
 

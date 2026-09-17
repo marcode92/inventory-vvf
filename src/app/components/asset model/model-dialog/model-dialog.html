@@ -1,0 +1,40 @@
+
+<div mat-dialog-title>CREATE MODEL</div>
+
+<mat-dialog-content appearance="outline" class="dialog-container">
+    <form [formGroup]="modelloForm">
+
+        <mat-form-field appearance="outline">
+            <mat-label>Nome Modello</mat-label>
+            <input matInput type="text" formControlName="nome_modello" />
+        </mat-form-field>
+
+        <div formArrayName="fields" class="rows-container">
+            <div *ngFor="let field of fields.controls; let i = index" [formGroupName]="i" class="field-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Nome Campo</mat-label>
+                    <input matInput type="text" formControlName="nome_campo" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Tipo Campo</mat-label>
+                    <mat-select formControlName="tipo_campo" 
+                        >
+                        <mat-option *ngFor="let tipo of tipi" [value]="tipo">
+                            {{ tipo }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <div class="switch-container">
+                    <label>Obbligatorio</label>
+                    <mat-slide-toggle formControlName="mandatory"></mat-slide-toggle>
+                </div>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Annulla</button>
+    <button mat-raised-button color="primary">Salva</button>
+    <button mat-raised-button color="primary" (click)="addRow()">+</button>
+</mat-dialog-actions>

@@ -1,43 +1,19 @@
 <div mat-dialog-title>ADD</div>
 
-<mat-dialog-content appearance="outline">
-    <form [formGroup]="addItemForm" class="form-container">
+<!-- <mat-dialog-content >
 
-        <mat-form-field appearance="outline">
-            <mat-label>Cat tipo</mat-label>
-            <input matInput type="text" formControlName="cat_tipo" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Num Inv</mat-label>
-            <input matInput type="text" [(ngModel)]="param" formControlName="num_inv" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Sec pdci</mat-label>
-            <input matInput type="text" formControlName="sec_pdci" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Denominazione</mat-label>
-            <input matInput type="text" formControlName="denominazione" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Matricola</mat-label>
-            <input matInput type="text" formControlName="matricola" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Annotazioni</mat-label>
-            <input matInput type="text" formControlName="annotazioni" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Stanza</mat-label>
-            <input matInput type="text" formControlName="stanza" />
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-            <mat-label>Possessori</mat-label>
-            <input matInput type="text" formControlName="possessori" />
-        </mat-form-field>
-    </form>
+</mat-dialog-content> -->
+<mat-dialog-content appearance="outline">
+<inv-item *ngIf="!currentPage"></inv-item>
+<tech-item *ngIf="currentPage"></tech-item>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
+    <button mat-icon-button (click)="changePage()">
+     <mat-icon>chevron_left</mat-icon>
+    </button>
+    <button mat-icon-button (click)="changePage()">
+     <mat-icon>chevron_right</mat-icon>
+    </button>
     <button mat-button mat-dialog-close>Annulla</button>
-    <button mat-raised-button color="primary" (click)="save()" [disabled]="loading">Salva</button>
+    <button mat-raised-button color="primary" [disabled]="loading">Salva</button>
 </mat-dialog-actions>
