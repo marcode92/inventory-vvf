@@ -4,15 +4,25 @@
 
 </mat-dialog-content> -->
 <mat-dialog-content appearance="outline">
-<inv-item *ngIf="!currentPage"></inv-item>
-<tech-item *ngIf="currentPage"></tech-item>
+    <div>
+        <form [formGroup]="typeItem">
+            <mat-form-field appearance="outline">
+                <mat-label>Tipo item</mat-label>
+                <mat-select formControlName="model">
+                    <mat-option *ngFor="let tipo of tipi" [value]="tipo">
+                        {{ tipo }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </form>
+    </div>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-icon-button (click)="changePage()">
-     <mat-icon>chevron_left</mat-icon>
+        <mat-icon>chevron_left</mat-icon>
     </button>
     <button mat-icon-button (click)="changePage()">
-     <mat-icon>chevron_right</mat-icon>
+        <mat-icon>chevron_right</mat-icon>
     </button>
     <button mat-button mat-dialog-close>Annulla</button>
     <button mat-raised-button color="primary" [disabled]="loading">Salva</button>

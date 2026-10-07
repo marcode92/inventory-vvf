@@ -1,17 +1,13 @@
 import { Component, Inject } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ServiceInventory } from '../../service-inventory/service-inventory';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InventoryItem } from '../../../yaml/home-table';
 import { ReactiveFormsModule } from '@angular/forms';
-import dayjs from 'dayjs';
-import { switchMap, throwError } from 'rxjs';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TechItem } from './tech-item/tech-item';
 import { InvItem } from './inv-item/inv-item';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
@@ -19,7 +15,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'add-item-dialog',
   imports: [MatDialogModule, MatButtonModule, ReactiveFormsModule, 
-    TechItem,InvItem, MatFormField, MatInputModule, MatIconModule, CommonModule],
+    InvItem, MatFormField, MatInputModule, MatIconModule, CommonModule],
   templateUrl: './add-item-dialog.html',
   styleUrl: './add-item-dialog.scss',
 })
@@ -27,11 +23,12 @@ export class AddItemDialog {
   loading = false;
   error: string | null = null;
   //itemToAdd: InventoryItem = {};
-  invalid_field: string = ''
+  invalid_field: string = '';
+  listModel: FormGroup;
 
   constructor(private dialogRef: MatDialogRef<AddItemDialog>,
     private serviceInventory: ServiceInventory, private snackBar: MatSnackBar, 
-    @Inject(MAT_DIALOG_DATA) public data:any) { }
+    private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data:any) { }
 
     param?: string;
     currentPage: boolean = true;
@@ -76,7 +73,21 @@ export class AddItemDialog {
     })
 
   } */
-
+    
+    this.listModel = this.fb.group({
+      nome_modello: ['', Validators.required],
+      fields: this.fb.array([
+        this.createField(),
+        this.createField(),
+        this.createField()
+      ])
+    });
+    ngOnInit(){
+      const name='marco'
+      this.serviceInventory.getModelList().subscribe(x => {
+        console.log(x.nome_modello);
+      })
+    }
     changePage(){
       this.currentPage = !this.currentPage;
     }

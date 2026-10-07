@@ -9,7 +9,6 @@ import { MatFormField } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { InvItem } from '../../add-item-dialog/inv-item/inv-item';
-import { TechItem } from '../../add-item-dialog/tech-item/tech-item';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
@@ -19,7 +18,7 @@ import { DialogRef } from '@angular/cdk/dialog';
 @Component({
   selector: 'app-model-dialog',
   imports: [MatDialogModule, MatButtonModule, ReactiveFormsModule,
-    TechItem, InvItem, MatFormField, MatInputModule, MatIconModule,
+     InvItem, MatFormField, MatInputModule, MatIconModule,
     CommonModule, MatRadioModule, MatSlideToggle, MatSelectModule, MatDialogTitle],
   templateUrl: './model-dialog.html',
   styleUrl: './model-dialog.scss',
