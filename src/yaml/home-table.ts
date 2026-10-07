@@ -94,11 +94,13 @@ export interface InventoryItem {
 
 }
 
-export interface AssetType {
+export interface AssetModel {
   nome_modello?:string,
-  campi?:[{
-  nome_campo?: string,
-  tipo_campo?:string,
-  mandatory?: boolean,
-  }]
+  campi?: FieldsType[],
+}
+
+export interface FieldsType {
+    nome_campo?: string,
+    tipo_campo?:string,
+    mandatory?: boolean,
 }

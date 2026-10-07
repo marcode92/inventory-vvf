@@ -13,7 +13,7 @@ import { TechItem } from '../../add-item-dialog/tech-item/tech-item';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
-import { AssetType } from '../../../../yaml/home-table';
+import { AssetModel, FieldsType } from '../../../../yaml/home-table';
 import { DialogRef } from '@angular/cdk/dialog';
 
 @Component({
@@ -27,7 +27,7 @@ import { DialogRef } from '@angular/cdk/dialog';
 export class ModelDialog {
   error: string | null = null;
   modelloForm: FormGroup;
-  assetType: AssetType = { campi: [{}] };
+  assetsType: AssetModel = { campi: [{}] };
 
   constructor(private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: any,
     private serviceInventory: ServiceInventory,
@@ -68,15 +68,24 @@ export class ModelDialog {
   } */
 
   save() {
-    this.assetType = {
+
+    const fields = this.modelloForm.get('fields') as FormArray;
+    const list_fields : FieldsType[] = [];
+    
+    fields.controls.forEach((x, i) => {
+      list_fields[i] = {
+        nome_campo : x.get('nome_campo')?.value || '',
+        tipo_campo : x.get('tipo_campo')?.value || '',
+        mandatory: x.get('mandatory')?.value || false,
+      }
+    })
+
+    this.assetsType = {
       nome_modello: this.modelloForm.get('nome_modello')?.value || '',
-      campi: [{
-        nome_campo: this.modelloForm.get('nome_campo')?.value || '',
-        tipo_campo: this.modelloForm.get('tipo_campo')?.value || '',
-        mandatory: this.modelloForm.get('mandatory')?.value || ''
-      }]
+      campi: list_fields
     }
-    this.serviceInventory.createAssetType(this.assetType).subscribe(
+
+    this.serviceInventory.createAssetType(this.assetsType).subscribe(
       {
         next: () => {
           this.dialogRef.close(true)
