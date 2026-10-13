@@ -29,12 +29,16 @@ export class ServiceInventory {
     return this.http.get<InventoryItem>(`${this.baseUrl}/inventories/readoneass?num_inv=${num_inv}`)
   }
 
+  getModelNames(): Observable<string[]>{
+    return this.http.get<string[]>(`${this.baseUrl}/inventories/modelnames`)
+  }
+
   getModel(name:string): Observable<AssetModel>{
     return this.http.get<AssetModel>(`${this.baseUrl}/inventories/type?modelname=${name}`)
   }
 
-  getModelList(): Observable<AssetModel>{
-    return this.http.get<AssetModel>(`${this.baseUrl}/inventories/typelist`)
+  getModelList(): Observable<AssetModel[]>{
+    return this.http.get<AssetModel[]>(`${this.baseUrl}/inventories/typelist`)
   }
 
  /* updHomeDataTable(): Observable<InventoryItem[]> {
