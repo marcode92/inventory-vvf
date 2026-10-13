@@ -20,6 +20,10 @@ export class ServiceInventory {
     return this.http.post<AssetModel>(`${this.baseUrl}/inventories/type`,body)
   }
 
+  createAsset(body:AssetModel): Observable<AssetModel>{
+    return this.http.post<AssetModel>(`${this.baseUrl}/inventories/assets`,body)
+  }
+
   addHomeDataTable(itemToAdd: InventoryItem): Observable<InventoryItem> {
     console.log("body:",itemToAdd)
      return this.http.post<InventoryItem>(`${this.baseUrl}/inventories/addass`,itemToAdd)
