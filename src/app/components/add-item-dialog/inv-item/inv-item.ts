@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AssetModel, FieldsType, InventoryItem } from '../../../../yaml/home-table';
+import { AssetModel, CustomField, FieldsType, InventoryItem } from '../../../../yaml/home-table';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -13,30 +13,43 @@ import { MatTableModule } from '@angular/material/table';
 import { AddMargin } from '../../../../directive/add-margin';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
+import { ServiceInventory } from '../../../service-inventory/service-inventory';
+  import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'inv-item',
   imports: [ReactiveFormsModule, CommonModule, MatTableModule,
     MatCheckboxModule, MatButtonModule, MatCardModule, AddMargin, MatDialogModule,
-    MatFormField, MatLabel, MatIcon, MatInputModule, MatDividerModule, MatSlideToggle ],
+    MatFormField, MatLabel, MatIcon, MatInputModule, MatDividerModule, MatSlideToggle,
+    MatSnackBarModule ],
   templateUrl: './inv-item.html',
   styleUrl: './inv-item.scss',
 })
 export class InvItem {
-  fields: FieldsType[] = [];
   
-  constructor(private dialogRef: MatDialogRef<InvItem>,  
-    @Inject(MAT_DIALOG_DATA) public dataFields: AssetModel){
+  get customFieldsCtrl(): FormArray<FormControl<string | number | boolean | null>>{
+    return this.addItemForm.controls.customFields;
   }
+
+  fields: FieldsType[] = [];
+  error: string | null = null;
+
+  constructor(private dialogRef: MatDialogRef<InvItem>,  
+    @Inject(MAT_DIALOG_DATA) public dataFields: AssetModel, 
+    public serviceInventory: ServiceInventory, private snackBar: MatSnackBar){
+  }
+
+
   addItemForm = new FormGroup({
-      cat_tipo: new FormControl(''),
-      num_inv: new FormControl(''),
-      sec_pdci: new FormControl(''),
-      denominazione: new FormControl(''),
-      matricola: new FormControl(''),
-      annotazioni: new FormControl(''),
-      stanza: new FormControl(''),
-      possessori: new FormControl(''),
+      cat_tipo: new FormControl('',[Validators.required]),
+      num_inv: new FormControl('', [Validators.required]),
+      sec_pdci: new FormControl('', [Validators.required]),
+      denominazione: new FormControl('', [Validators.required]),
+      matricola: new FormControl('', [Validators.required]),
+      annotazioni: new FormControl('', [Validators.required]),
+      stanza: new FormControl('', [Validators.required]),
+      possessori: new FormControl('', [Validators.required]),
+      out_of_service: new FormControl(false,[Validators.required]),
       customFields: new FormArray<FormControl<string | number | boolean | null>>([]),
     });
 
@@ -64,7 +77,7 @@ export class InvItem {
           initialValue = ''
       }
 
-      this.customFields.push(new FormControl<string | number | boolean | null>
+      this.customFieldsCtrl.push(new FormControl<string | number | boolean | null>
         (initialValue,
           {
         validators: field.mandatory ? [Validators.required] : []
@@ -72,11 +85,40 @@ export class InvItem {
     })
   }
 
-  get customFields(): FormArray<FormControl<string | number | boolean | null>>{
-    return this.addItemForm.controls.customFields;
-  }
-
   save(){
+    let itemToSave: InventoryItem;
+    let customFields: CustomField[] = []; 
+    this.customFieldsCtrl.controls.map((ctrl,i) => {
+      customFields.push({
+        name: this.fields[i].nome_campo || '',
+        type: this.fields[i].tipo_campo || '', 
+        value: ctrl.value || '',
+      }) 
+    })
     
+    itemToSave = {
+      annotazioni: this.addItemForm.get('annotazioni')?.value || '',
+      cat_tipo:this.addItemForm.get('cat_tipo')?.value || '',
+      denominazione: this.addItemForm.get('denominazione')?.value || '',
+      fuori_uso: this.addItemForm.get('out_of_service')?.value || false,
+      last_update: this.addItemForm.get('last_update')?.value || '',
+      matricola: this.addItemForm.get('matricola')?.value || '',
+      num_inv: this.addItemForm.get('num_inv')?.value || '',
+      possessori: this.addItemForm.get('possessori')?.value || '',
+      sec_pdci: this.addItemForm.get('sec_pdci')?.value || '',
+      stanza: this.addItemForm.get('stanza')?.value || '',
+      customFields, 
+    }
+
+    this.serviceInventory.createAsset(itemToSave).subscribe(
+      {
+     next: () => {
+       this.dialogRef.close(true)
+     },
+     error: () => {
+       this.error = "errore durante il salvataggio"
+       this.snackBar.open(this.error)
+     }
+   })
   }
 }

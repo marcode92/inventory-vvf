@@ -3,6 +3,7 @@
 <form [formGroup]="addItemForm" class="form-container">
     <mat-dialog-content>
         <h3> INVENTORY FIELDS </h3>
+        <div class="fields-grid">
         <mat-form-field appearance="outline">
             <mat-label>Cat tipo</mat-label>
             <input matInput type="text" formControlName="cat_tipo" />
@@ -35,10 +36,14 @@
             <mat-label>Possessori</mat-label>
             <input matInput type="text" formControlName="possessori" />
         </mat-form-field>
-
+            <mat-slide-toggle 
+                formControlName="out_of_service">
+                    Fuori uso
+            </mat-slide-toggle>
+</div>
         <mat-divider></mat-divider>
         <h3>CUSTOM FIELDS</h3>
-        <div formArrayName="customFields">
+        <div formArrayName="customFields" class="fields-grid">
             <ng-container *ngFor="let field of fields; let i = index">
                 <mat-form-field *ngIf="field.tipo_campo === 'Numerico'" appearance="outline">
                     <mat-label>{{ field.nome_campo }}</mat-label>

@@ -9,9 +9,15 @@ export interface InventoryItem {
   possessori?: string,
   last_update?: string,
   fuori_uso?: boolean,
+  customFields?: CustomField[],
 }
 
-export interface InventoryItem {
+export interface CustomField {
+  name:string,
+  value:string | number | boolean,
+  type:string,
+}
+/* export interface InventoryItem {
   PC: {
     NomePC: string,
     Dominio: string,
@@ -92,7 +98,7 @@ export interface InventoryItem {
     NumeroSerie: string
   }
 
-}
+} */
 
 export interface AssetModel {
   nome_modello?:string,

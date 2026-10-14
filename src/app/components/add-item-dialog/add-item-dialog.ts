@@ -96,7 +96,7 @@ export class AddItemDialog {
   search() {
     const nameModel = this.modelFormCtrl.value;
     console.log(nameModel);
-    this.serviceInventory.getModel(nameModel || '').subscribe(modelFields => {
+    this.serviceInventory.getModelOneName(nameModel || '').subscribe(modelFields => {
       this.dialogRef.close(true)
       this.openAssetDialog(modelFields);
     })

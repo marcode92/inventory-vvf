@@ -16,14 +16,6 @@ export class ServiceInventory {
     return this.http.get<InventoryItem[]>(`${this.baseUrl}/inventories/readlist`)
   }
 
-  createAssetType(body:AssetModel): Observable<AssetModel>{
-    return this.http.post<AssetModel>(`${this.baseUrl}/inventories/type`,body)
-  }
-
-  createAsset(body:AssetModel): Observable<AssetModel>{
-    return this.http.post<AssetModel>(`${this.baseUrl}/inventories/assets`,body)
-  }
-
   addHomeDataTable(itemToAdd: InventoryItem): Observable<InventoryItem> {
     console.log("body:",itemToAdd)
      return this.http.post<InventoryItem>(`${this.baseUrl}/inventories/addass`,itemToAdd)
@@ -33,19 +25,31 @@ export class ServiceInventory {
     return this.http.get<InventoryItem>(`${this.baseUrl}/inventories/readoneass?num_inv=${num_inv}`)
   }
 
+/************CRUD MODELS**********************/
+
+//GET NAME LIST MODEL
   getModelNames(): Observable<string[]>{
     return this.http.get<string[]>(`${this.baseUrl}/inventories/modelnames`)
   }
 
-  getModel(name:string): Observable<AssetModel>{
+//GET ONE MODEL'S NAME
+  getModelOneName(name:string): Observable<AssetModel>{
     return this.http.get<AssetModel>(`${this.baseUrl}/inventories/type?modelname=${name}`)
   }
 
+//GET LIST OF FULL MODELS (name, fields) 
   getModelList(): Observable<AssetModel[]>{
     return this.http.get<AssetModel[]>(`${this.baseUrl}/inventories/typelist`)
   }
 
- /* updHomeDataTable(): Observable<InventoryItem[]> {
-    return this.http.update<InventoryItem[]>(`${this.baseUrl}/home-table.json`)
-  } */
+//CREATE MODEL
+createModel(body:AssetModel): Observable<AssetModel>{
+    return this.http.post<AssetModel>(`${this.baseUrl}/inventories/type`,body)
+  }
+/***********************************************/
+
+/************CRUD ASSETS**********************/
+createAsset(body:InventoryItem): Observable<[]>{
+    return this.http.post<[]>(`${this.baseUrl}/inventories/assets`,body)
+  }
 }

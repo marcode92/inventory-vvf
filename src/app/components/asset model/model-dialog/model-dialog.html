@@ -1,4 +1,3 @@
-
 <div mat-dialog-title>CREATE MODEL</div>
 
 <mat-dialog-content appearance="outline" class="dialog-container">
@@ -7,6 +6,9 @@
         <mat-form-field appearance="outline">
             <mat-label>Nome Modello</mat-label>
             <input matInput type="text" formControlName="nome_modello" />
+            <mat-error *ngIf="modelloForm.get('nome_modello')?.hasError('alreadyExists')">
+                Nome già esistente
+            </mat-error>
         </mat-form-field>
 
         <div formArrayName="fields" class="rows-container">
@@ -18,8 +20,7 @@
 
                 <mat-form-field appearance="outline">
                     <mat-label>Tipo Campo</mat-label>
-                    <mat-select formControlName="tipo_campo" 
-                        >
+                    <mat-select formControlName="tipo_campo">
                         <mat-option *ngFor="let tipo of tipi" [value]="tipo">
                             {{ tipo }}
                         </mat-option>
@@ -28,6 +29,16 @@
                 <div class="switch-container">
                     <label>Obbligatorio</label>
                     <mat-slide-toggle formControlName="mandatory"></mat-slide-toggle>
+                </div>
+                <div>
+                    <button mat-icon-button (click)="removeRow(i)">
+                        <mat-icon> delete </mat-icon>
+                    </button>
+                </div>
+                <div *ngIf="i == fields.length - 1">
+                    <button mat-icon-button (click)="addRow()">
+                        <mat-icon> add </mat-icon>
+                    </button>
                 </div>
             </div>
         </div>

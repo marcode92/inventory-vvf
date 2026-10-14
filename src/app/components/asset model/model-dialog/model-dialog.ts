@@ -62,14 +62,33 @@ export class ModelDialog {
     this.fields.push(this.createField())
   }
 
-  /* removeRow(index:number){
-    this.fields.removeAt(index);
-  } */
+  removeRow(index:number){
+    if(this.fields.length > 1)
+      this.fields.removeAt(index);
+    else
+    {
+      this.error = "Minimo numero righe 1"
+          this.snackBar.open(this.error)
+    }
+  }
+
+  checkModelsName(){
+    this.serviceInventory.getModelOneName(this.modelloForm.get('nome_modello')?.value)
+    .subscribe(x => {
+      if(x){
+        this.modelloForm.get('nome_modello')?.setErrors({
+          alreadyExists: true
+        })
+      }
+    })
+  }
 
   save() {
+    this.checkModelsName();
 
+    if(this.modelloForm.valid){
     const fields = this.modelloForm.get('fields') as FormArray;
-    const list_fields : FieldsType[] = [];
+    let list_fields : FieldsType[] = [];
     
     fields.controls.forEach((x, i) => {
       list_fields[i] = {
@@ -84,7 +103,7 @@ export class ModelDialog {
       campi: list_fields
     }
 
-    this.serviceInventory.createAssetType(this.assetsType).subscribe(
+    this.serviceInventory.createModel(this.assetsType).subscribe(
       {
         next: () => {
           this.dialogRef.close(true)
@@ -95,5 +114,5 @@ export class ModelDialog {
         }
       }
     )
-  }
+  }}
 }
