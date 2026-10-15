@@ -35,7 +35,7 @@ export class InvItem {
   error: string | null = null;
 
   constructor(private dialogRef: MatDialogRef<InvItem>,  
-    @Inject(MAT_DIALOG_DATA) public dataFields: AssetModel, 
+    @Inject(MAT_DIALOG_DATA) public modelName: string, 
     public serviceInventory: ServiceInventory, private snackBar: MatSnackBar){
   }
 
@@ -55,9 +55,10 @@ export class InvItem {
 
 //itemToAdd: InventoryItem = {};
   ngOnInit(){
-   
-    if(this.dataFields.campi)
-      this.fields = this.dataFields.campi;
+   this.serviceInventory.getModelOneName(this.modelName || '').subscribe(dataFields => {
+
+    if(dataFields.campi)
+      this.fields = dataFields.campi;
 
     this.fields.forEach(field => {
 
@@ -82,6 +83,7 @@ export class InvItem {
           {
         validators: field.mandatory ? [Validators.required] : []
       }))
+    })
     })
   }
 
@@ -108,6 +110,7 @@ export class InvItem {
       sec_pdci: this.addItemForm.get('sec_pdci')?.value || '',
       stanza: this.addItemForm.get('stanza')?.value || '',
       customFields, 
+      modelName:this.modelName
     }
 
     this.serviceInventory.createAsset(itemToSave).subscribe(

@@ -10,6 +10,7 @@ export interface InventoryItem {
   last_update?: string,
   fuori_uso?: boolean,
   customFields?: CustomField[],
+  modelName: string;
 }
 
 export interface CustomField {

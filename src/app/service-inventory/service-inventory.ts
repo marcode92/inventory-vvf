@@ -52,4 +52,12 @@ createModel(body:AssetModel): Observable<AssetModel>{
 createAsset(body:InventoryItem): Observable<[]>{
     return this.http.post<[]>(`${this.baseUrl}/inventories/assets`,body)
   }
+
+readAssetHome(): Observable<InventoryItem[]>{
+  return this.http.get<InventoryItem[]>(`${this.baseUrl}/inventories/assetshome`)
+  }  
+
+readAssetDialog(matricola:string): Observable<InventoryItem>{
+  return this.http.get<InventoryItem>(`${this.baseUrl}/inventories/assetonefull?matricola=${matricola}`)
+  } 
 }

@@ -41,52 +41,8 @@ export class AddItemDialog {
      console.log("stampa qrcode",this.data.qrCode)
      this.param = this.data.qrCode
    }
- 
+ */
 
- save() {
-   this.itemToAdd = {
-     cat_tipo: this.addItemForm.get('cat_tipo')?.value || '',
-     num_inv: this.addItemForm.get('num_inv')?.value || '',
-     annotazioni: this.addItemForm.get('annotazioni')?.value || '',
-     denominazione: this.addItemForm.get('denominazione')?.value || '',
-     matricola: this.addItemForm.get('matricola')?.value || '',
-     possessori: this.addItemForm.get('possessori')?.value || '',
-     sec_pdci: this.addItemForm.get('sec_pdci')?.value || '',
-     stanza: this.addItemForm.get('stanza')?.value || '',
-     last_update: dayjs().format('YYYY-MM-DD HH:mm'),
-     fuori_uso: false,
-   }
-
-
-   this.serviceInventory.readOneAss(this.itemToAdd.num_inv).pipe(
-     switchMap((res: any) => {
-       if (res && res.length > 0) {
-         this.invalid_field = 'error';
-         return throwError(() => new Error());
-       }
-       return this.serviceInventory.addHomeDataTable(this.itemToAdd);
-     }),
-   ).subscribe({
-     next: () => {
-       this.loading = false;
-       this.dialogRef.close(true)
-     },
-     error: () => {
-       this.error = "errore durante il salvataggio"
-       this.snackBar.open(this.error)
-     }
-   })
-
- } */
-
-  /*  this.listModel = this.fb.group({
-     nome_modello: ['', Validators.required],
-     fields: this.fb.array([
-       this.createField(),
-       this.createField(),
-       this.createField()
-     ])
-   }); */
   ngOnInit() {
     this.serviceInventory.getModelNames().subscribe(x => {
       this.listModelsName = x
@@ -94,15 +50,12 @@ export class AddItemDialog {
   }
 
   search() {
-    const nameModel = this.modelFormCtrl.value;
-    console.log(nameModel);
-    this.serviceInventory.getModelOneName(nameModel || '').subscribe(modelFields => {
-      this.dialogRef.close(true)
-      this.openAssetDialog(modelFields);
-    })
+    const modelName = this.modelFormCtrl.value || '';
+    this.openAssetDialog(modelName);
   }
 
-  openAssetDialog(modelFields: AssetModel) {
+  openAssetDialog(data: string) {
+    this.dialogRef.close(true)
     const dialogRef = this.dialog.open(InvItem,
       {
         width: '900px',
@@ -110,7 +63,7 @@ export class AddItemDialog {
         height: '650px',
         maxHeight: '90vh',
         panelClass: 'custom-dialog',
-        data: modelFields
+        data
       }
     );
 

@@ -16,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ScannerDialog } from '../scanner-dialog/scanner-dialog';
 import { AddItemDialog } from '../components/add-item-dialog/add-item-dialog';
 import { ModelDialog } from '../components/asset model/model-dialog/model-dialog';
+import { InvItem } from '../components/add-item-dialog/inv-item/inv-item';
 
 
 @Component({
@@ -61,32 +62,53 @@ export class HomeInventory {
       console.log("funziona", value);
     });
 
-    this.serviceInventory.getHomeDataTable().subscribe(data => {
+    this.serviceInventory.readAssetHome().subscribe(data => {
       this.dataSource.data = data;
     })
   }
+    openCreateItemDialog(){
 
-  openDialog(data?: string) {
-    const dialogRef = this.dialog.open(AddItemDialog,
-      {
-        width: '50%',
-        maxWidth: '95vw',
-        maxHeight: '90vh',
-        data: {
-          qrCode: data
+      const dialogRef = this.dialog.open(AddItemDialog,
+        {
+          width: '50%',
+          maxWidth: '95vw',
+          maxHeight: '90vh',
         }
-      }
-    );
+      );
+    }
 
+    openAssetDialogRead(matricola:string){
+      console.log(matricola)
+      const dialogRef = this.dialog.open(AddItemDialog,
+        {
+          width: '50%',
+          maxWidth: '95vw',
+          maxHeight: '90vh',
+        }
+      );
+    }
+
+    /* openReadItemDialog(matricola:string){
+
+      const dialogRef = this.dialog.open(InvItem,
+        {
+          width: '50%',
+          maxWidth: '95vw',
+          maxHeight: '90vh',
+          data: matricola
+        }
+      );
+    } */
+
+/* 
     dialogRef.afterClosed().pipe(
       switchMap(() => this.serviceInventory.getHomeDataTable())
     ).subscribe(data => {
       this.dataSource.data = data;
-    })
-  }
+    }) */
 
 
-  openScanDialog() {
+ /*  openScanDialog() {
     const dialogRef = this.dialog.open(ScannerDialog,
       {
         width: '50%',
@@ -99,7 +121,7 @@ export class HomeInventory {
     dialogRef.afterClosed().subscribe(data => {
       this.openDialog(data)
     })
-  }
+  } */
 
   openModelDialog() {
     const dialogRef = this.dialog.open(ModelDialog,
