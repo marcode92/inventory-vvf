@@ -9,7 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { AddMargin } from '../../directive/add-margin';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { switchMap } from 'rxjs';
+import { switchMap, tap } from 'rxjs';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -70,23 +70,19 @@ export class HomeInventory {
     openCreateItemDialog(){
 
       const dialogRef = this.dialog.open(AddItemDialog,
-        {
-          width: '50%',
+        { 
+          width: '450px',
           maxWidth: '95vw',
           maxHeight: '90vh',
         }
       );
-    }
-
-    openAssetDialogRead(matricola:string){
-      console.log(matricola)
-      const dialogRef = this.dialog.open(AddItemDialog,
-        {
-          width: '50%',
-          maxWidth: '95vw',
-          maxHeight: '90vh',
-        }
-      );
+      dialogRef.afterClosed().pipe(
+        tap(result => console.log("result",result)),
+      switchMap(() => this.serviceInventory.readAssetHome())
+    ).subscribe(data => {
+      console.log("aqui",data)
+      this.dataSource.data = data;
+    })
     }
 
     openReadItemDialog(matricola:string){
@@ -99,6 +95,12 @@ export class HomeInventory {
           data: matricola
         }
       );
+
+      dialogRef.afterClosed().pipe(
+      switchMap(() => this.serviceInventory.readAssetHome())
+    ).subscribe(data => {
+      this.dataSource.data = data;
+    })
     }
 
 /* 

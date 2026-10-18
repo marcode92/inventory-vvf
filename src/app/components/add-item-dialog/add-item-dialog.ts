@@ -17,7 +17,8 @@ import { AssetModel } from '../../../yaml/home-table';
 @Component({
   selector: 'add-item-dialog',
   imports: [MatDialogModule, MatButtonModule, ReactiveFormsModule,
-    InvItem, MatFormField, MatInputModule, MatIconModule, CommonModule, MatSelectModule],
+    InvItem, MatFormField, MatInputModule, MatIconModule, CommonModule, 
+    MatSelectModule],
   templateUrl: './add-item-dialog.html',
   styleUrl: './add-item-dialog.scss',
 })
@@ -37,24 +38,27 @@ export class AddItemDialog {
 
   param?: string;
   currentPage: boolean = true;
-  /*  ngOnInit(){
-     console.log("stampa qrcode",this.data.qrCode)
-     this.param = this.data.qrCode
-   }
- */
-
+  select: boolean = true;
+  selectedModel = ''
   ngOnInit() {
     this.serviceInventory.getModelNames().subscribe(x => {
       this.listModelsName = x
+      this.selectedModel = this.listModelsName[0];
     })
   }
 
   search() {
-    const modelName = this.modelFormCtrl.value || '';
-    this.openAssetDialog(modelName);
+    this.selectedModel = this.modelFormCtrl.value || '';
+    this.select = !this.select;
+    this.dialogRef.updateSize('900px', '650px');
+    //this.openAssetDialog(modelName);
   }
 
-  openAssetDialog(data: string) {
+changeModel(){
+  this.select = true;
+  this.dialogRef.updateSize('450px', 'auto');
+}
+  /* openAssetDialog(data: string) {
     this.dialogRef.close(true)
     const dialogRef = this.dialog.open(InvItem,
       {
@@ -67,8 +71,11 @@ export class AddItemDialog {
       }
     );
 
-    /* dialogRef.afterClosed().pipe(
-    ).subscribe(data => {
-    }) */
-  }
+   dialogRef.afterClosed().subscribe(result => {
+    if (result === true) {
+      this.dialogRef.close(true);
+    }
+  });
+}
+*/  
 }

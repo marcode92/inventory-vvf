@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AssetModel, FieldsItem, FieldsModel, AssetItem } from '../../../../yaml/home-table';
 import { CommonModule } from '@angular/common';
@@ -26,19 +26,20 @@ import { ServiceInventory } from '../../../service-inventory/service-inventory';
   styleUrl: './inv-item.scss',
 })
 export class InvItem {
+  @Input() modelName!: string;
   
   get fieldsItemsCtrl(): FormArray<FormControl<string | number | boolean | null>>{
     return this.addItemForm.controls.fieldsItemsCtrl;
   }
-
   modelFields: FieldsModel[] = [];
   error: string | null = null;
+  listModelsName: string[] = [];
 
-  constructor(private dialogRef: MatDialogRef<InvItem>,  
-    @Inject(MAT_DIALOG_DATA) public modelName: string, 
-    public serviceInventory: ServiceInventory, private snackBar: MatSnackBar){
+  constructor(  
+    public serviceInventory: ServiceInventory, private snackBar: MatSnackBar,  
+    private cdr: ChangeDetectorRef
+){
   }
-
 
   addItemForm = new FormGroup({
       cat_tipo: new FormControl('',[Validators.required]),
@@ -53,7 +54,7 @@ export class InvItem {
       fieldsItemsCtrl: new FormArray<FormControl<string | number | boolean | null>>([]),
     });
 
-  ngOnInit(){
+  ngOnInit(){     
    this.serviceInventory.getModelOneName(this.modelName || '').subscribe(dataFields => {
 
     if(dataFields.campi)
@@ -83,6 +84,7 @@ export class InvItem {
         validators: field.mandatory ? [Validators.required] : []
       }))
     })
+    this.cdr.detectChanges();
     })
   }
 
@@ -113,8 +115,8 @@ export class InvItem {
 
     this.serviceInventory.createAsset(itemToSave).subscribe(
       {
-     next: () => {
-       this.dialogRef.close(true)
+     next: () => { console.log("test")
+      // this.dialogRef.close(true)
      },
      error: () => {
        this.error = "errore durante il salvataggio"

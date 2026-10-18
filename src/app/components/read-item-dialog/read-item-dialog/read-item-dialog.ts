@@ -27,54 +27,69 @@ import { AddMargin } from '../../../../directive/add-margin';
   styleUrl: './read-item-dialog.scss',
 })
 export class ReadItemDialog {
-  
-  get fieldsItemsCtrl(): FormArray<FormControl<string | number | boolean | null>>{
+
+  get fieldsItemsCtrl(): FormArray<FormControl<string | number | boolean | null>> {
     return this.addItemForm.controls.fieldsItemsCtrl;
   }
 
   modelFields: FieldsModel[] = [];
   error: string | null = null;
-  
-  constructor(private dialogRef: MatDialogRef<ReadItemDialog>,  
-    @Inject(MAT_DIALOG_DATA) public matricola: string, 
-    public serviceInventory: ServiceInventory, private snackBar: MatSnackBar){
+
+  constructor(private dialogRef: MatDialogRef<ReadItemDialog>,
+    @Inject(MAT_DIALOG_DATA) public matricola: string,
+    public serviceInventory: ServiceInventory, private snackBar: MatSnackBar) {
   }
-  
+
   addItemForm = new FormGroup({
-      cat_tipo: new FormControl('',[Validators.required]),
-      num_inv: new FormControl('', [Validators.required]),
-      sec_pdci: new FormControl('', [Validators.required]),
-      denominazione: new FormControl('', [Validators.required]),
-      matricola: new FormControl('', [Validators.required]),
-      annotazioni: new FormControl('', [Validators.required]),
-      stanza: new FormControl('', [Validators.required]),
-      possessori: new FormControl('', [Validators.required]),
-      out_of_service: new FormControl(false,[Validators.required]),
-      fieldsItemsCtrl: new FormArray<FormControl<string | number | boolean | null>>([]),
-    });
-    
-  ngOnInit(){
+    cat_tipo: new FormControl('', [Validators.required]),
+    num_inv: new FormControl('', [Validators.required]),
+    sec_pdci: new FormControl('', [Validators.required]),
+    denominazione: new FormControl('', [Validators.required]),
+    matricola: new FormControl('', [Validators.required]),
+    annotazioni: new FormControl('', [Validators.required]),
+    stanza: new FormControl('', [Validators.required]),
+    possessori: new FormControl('', [Validators.required]),
+    out_of_service: new FormControl(false, [Validators.required]),
+    fieldsItemsCtrl: new FormArray<FormControl<string | number | boolean | null>>([]),
+  });
+
+  ngOnInit() {
     this.serviceInventory.readAssetFull(this.matricola).pipe(
       switchMap(asset =>
-           this.serviceInventory.getModelOneName(asset.modelName).pipe(
-            map(model => ({asset,model}))
-      ))).subscribe(({asset,model}) => {
-      
-          if(model.campi)
+        this.serviceInventory.getModelOneName(asset.modelName).pipe(
+          map(model => ({ asset, model }))
+        ))).subscribe(({ asset, model }) => {
+          this.addItemForm.get('annotazioni')?.setValue(asset.annotazioni || '')
+          this.addItemForm.get('cat_tipo')?.setValue(asset.cat_tipo || '')
+          this.addItemForm.get('denominazione')?.setValue(asset.denominazione || '')
+          this.addItemForm.get('out_of_service')?.setValue(asset.fuori_uso || false)
+          /* this.addItemForm.get('last_update')?.setValue(asset.last_update || null) */
+          this.addItemForm.get('matricola')?.setValue(asset.matricola || '')
+          this.addItemForm.get('num_inv')?.setValue(asset.num_inv || '')
+          this.addItemForm.get('possessori')?.setValue(asset.possessori || '')
+          this.addItemForm.get('sec_pdci')?.setValue(asset.sec_pdci || '')
+          this.addItemForm.get('stanza')?.setValue(asset.stanza || '')
+
+          if (model.campi)
             this.modelFields = model.campi;
-      
+
           this.modelFields.forEach(field => {
-      
+
             let initialValue: string | number | boolean | null;
 
-                initialValue = 
-                asset.fieldsItemToSave?.find(f => f.idField === field.idField)?.value ?? null
+            initialValue =
+              asset.fieldsItemToSave?.find(f => f.idField === field.idField)?.value ?? null
 
-                  this.fieldsItemsCtrl.push(new FormControl<string | number | boolean | null>
-                    (initialValue,
-                      {
-                    validators: field.mandatory ? [Validators.required] : []
-                  }))
-                })
-                })}
-              }
+            this.fieldsItemsCtrl.push(new FormControl<string | number | boolean | null>
+              (initialValue,
+                {
+                  validators: field.mandatory ? [Validators.required] : []
+                }))
+          })
+        })
+  }
+
+  update(){
+    
+  }
+}

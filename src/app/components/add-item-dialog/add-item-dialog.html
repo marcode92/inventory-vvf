@@ -1,22 +1,35 @@
-<div mat-dialog-title>SELECT MODEL</div>
+<div mat-dialog-title>
+    {{ select ? 'SELECT MODEL' : 'ADD ASSET' }}
+</div>
 
-<!-- <mat-dialog-content >
-
-</mat-dialog-content> -->
 <mat-dialog-content appearance="outline">
-    <div>
-            <mat-form-field appearance="outline">
+
+<div *ngIf="select">
+            <mat-form-field appearance="outline" class="margin">
                 <mat-label>Tipo item</mat-label>
-                <mat-select [formControl]="modelFormCtrl">
+                <mat-select [formControl]="modelFormCtrl" [(value)]="selectedModel">
                     <mat-option *ngFor="let tipo of listModelsName" [value]="tipo">
                         {{ tipo }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-    </div>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-    
-    <button mat-button mat-dialog-close>Annulla</button>
-    <button mat-raised-button color="primary" (click) = "search()" >OK</button>
-</mat-dialog-actions>
+        </div>
+        
+        <inv-item *ngIf="!select" [modelName]="selectedModel"></inv-item>
+            
+        </mat-dialog-content>
+
+        <mat-dialog-actions *ngIf="select" align="end">
+            <button mat-button mat-dialog-close>Annulla</button>
+            <button mat-raised-button color="primary" (click)="search()">OK</button>
+        </mat-dialog-actions>
+        <mat-dialog-actions *ngIf="!select" class="dialog-actions" >
+            <button mat-button (click)="changeModel()">
+            <mat-icon >chevron_left</mat-icon>
+            Indietro
+            </button>
+            <div >
+            <button mat-button mat-dialog-close>Annulla</button>
+            <button mat-raised-button color="primary" (click)="search()">OK</button>
+            </div>
+        </mat-dialog-actions>
