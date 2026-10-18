@@ -61,19 +61,21 @@ changeModel(){
 }
 
 save(){
-  this.invItem.prepareItem().subscribe(x =>{});
+  this.invItem.prepareItem().subscribe(itemToSave =>{
+    if(itemToSave === null ) return
     if(this.invItem.addItemForm.valid){
-    this.serviceInventory.createAsset(itemToSave).subscribe(
-      {
-     next: () => { console.log("test")
-      this.dialogRef.close(true)
-     },
-     error: () => {
-       this.error = "errore durante il salvataggio"
-       this.snackBar.open(this.error)
-     }
-   })
-  }
+      this.serviceInventory.createAsset(itemToSave).subscribe(
+        {
+          next: () => { console.log("test")
+            this.dialogRef.close(true)
+          },
+          error: () => {
+            this.error = "errore durante il salvataggio"
+            this.snackBar.open(this.error)
+          }
+        })
+      }
+    });
 }
   /* openAssetDialog(data: string) {
     this.dialogRef.close(true)
