@@ -1,4 +1,4 @@
-export interface InventoryItem {
+export interface AssetItem {
   cat_tipo?: string,
   num_inv?: string,
   sec_pdci?: string,
@@ -9,16 +9,16 @@ export interface InventoryItem {
   possessori?: string,
   last_update?: string,
   fuori_uso?: boolean,
-  customFields?: CustomField[],
+  fieldsItemToSave?: FieldsItem[],
   modelName: string;
 }
 
-export interface CustomField {
-  name:string,
-  value:string | number | boolean,
-  type:string,
+export interface FieldsItem {
+  idField?:string;
+  value?:string | number | boolean,
 }
-/* export interface InventoryItem {
+
+/* export interface AssetItem {
   PC: {
     NomePC: string,
     Dominio: string,
@@ -103,10 +103,11 @@ export interface CustomField {
 
 export interface AssetModel {
   nome_modello?:string,
-  campi?: FieldsType[],
+  campi?: FieldsModel[],
 }
 
-export interface FieldsType {
+export interface FieldsModel {
+    idField?:string,
     nome_campo?: string,
     tipo_campo?:string,
     mandatory?: boolean,

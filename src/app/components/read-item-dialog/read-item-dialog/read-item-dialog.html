@@ -1,1 +1,74 @@
-<p>read-item-dialog works!</p>
+<h2 mat-dialog-title>ASSET</h2>
+
+<form [formGroup]="addItemForm" class="form-container">
+    <mat-dialog-content>
+        <h3> INVENTORY FIELDS </h3>
+        <div class="fields-grid">
+        <mat-form-field appearance="outline">
+            <mat-label>Cat tipo</mat-label>
+            <input matInput type="text" formControlName="cat_tipo" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Num Inv</mat-label>
+            <input matInput type="text" formControlName="num_inv" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Sec pdci</mat-label>
+            <input matInput type="text" formControlName="sec_pdci" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Denominazione</mat-label>
+            <input matInput type="text" formControlName="denominazione" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Matricola</mat-label>
+            <input matInput type="text" formControlName="matricola" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Annotazioni</mat-label>
+            <input matInput type="text" formControlName="annotazioni" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Stanza</mat-label>
+            <input matInput type="text" formControlName="stanza" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Possessori</mat-label>
+            <input matInput type="text" formControlName="possessori" />
+        </mat-form-field>
+            <mat-slide-toggle 
+                formControlName="out_of_service">
+                    Fuori uso
+            </mat-slide-toggle>
+</div>
+        <mat-divider></mat-divider>
+        <h3>CUSTOM FIELDS</h3>
+        <div formArrayName="fieldsItemsCtrl" class="fields-grid">
+            <ng-container *ngFor="let field of modelFields; let i = index">
+                <mat-form-field *ngIf="field.tipo_campo === 'Numerico'" appearance="outline">
+                    <mat-label>{{ field.nome_campo }}</mat-label>
+                    <input matInput type="number" [formControlName]="i">
+                </mat-form-field>
+
+                <mat-form-field *ngIf="field.tipo_campo === 'Alfanumerico'" appearance="outline">
+                    <mat-label>{{ field.nome_campo }}</mat-label>
+                    <input matInput type="text" [formControlName]="i">
+                </mat-form-field>
+
+                <mat-slide-toggle 
+                *ngIf="field.tipo_campo == 'Decisionale'" appearance="outline" 
+                [formControlName]="i">
+                    {{ field.nome_campo }}
+                </mat-slide-toggle>
+            </ng-container>
+        </div>
+    </mat-dialog-content>
+</form>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Annulla</button>
+
+    <button mat-flat-button>
+        Salva
+    </button>
+</mat-dialog-actions>

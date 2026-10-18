@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AssetModel, CustomField, FieldsType, InventoryItem } from '../../../../yaml/home-table';
+import { AssetModel, FieldsItem, FieldsModel, AssetItem } from '../../../../yaml/home-table';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -27,11 +27,11 @@ import { ServiceInventory } from '../../../service-inventory/service-inventory';
 })
 export class InvItem {
   
-  get customFieldsCtrl(): FormArray<FormControl<string | number | boolean | null>>{
-    return this.addItemForm.controls.customFields;
+  get fieldsItemsCtrl(): FormArray<FormControl<string | number | boolean | null>>{
+    return this.addItemForm.controls.fieldsItemsCtrl;
   }
 
-  fields: FieldsType[] = [];
+  modelFields: FieldsModel[] = [];
   error: string | null = null;
 
   constructor(private dialogRef: MatDialogRef<InvItem>,  
@@ -50,17 +50,16 @@ export class InvItem {
       stanza: new FormControl('', [Validators.required]),
       possessori: new FormControl('', [Validators.required]),
       out_of_service: new FormControl(false,[Validators.required]),
-      customFields: new FormArray<FormControl<string | number | boolean | null>>([]),
+      fieldsItemsCtrl: new FormArray<FormControl<string | number | boolean | null>>([]),
     });
 
-//itemToAdd: InventoryItem = {};
   ngOnInit(){
    this.serviceInventory.getModelOneName(this.modelName || '').subscribe(dataFields => {
 
     if(dataFields.campi)
-      this.fields = dataFields.campi;
+      this.modelFields = dataFields.campi;
 
-    this.fields.forEach(field => {
+    this.modelFields.forEach(field => {
 
       let initialValue: string | number | boolean;
 
@@ -78,7 +77,7 @@ export class InvItem {
           initialValue = ''
       }
 
-      this.customFieldsCtrl.push(new FormControl<string | number | boolean | null>
+      this.fieldsItemsCtrl.push(new FormControl<string | number | boolean | null>
         (initialValue,
           {
         validators: field.mandatory ? [Validators.required] : []
@@ -88,12 +87,11 @@ export class InvItem {
   }
 
   save(){
-    let itemToSave: InventoryItem;
-    let customFields: CustomField[] = []; 
-    this.customFieldsCtrl.controls.map((ctrl,i) => {
-      customFields.push({
-        name: this.fields[i].nome_campo || '',
-        type: this.fields[i].tipo_campo || '', 
+    let itemToSave: AssetItem;
+    let fieldsItemToSave: FieldsItem[] = []; 
+    this.fieldsItemsCtrl.controls.map((ctrl,i) => {
+      fieldsItemToSave.push({
+        idField:this.modelFields[i].idField || '',
         value: ctrl.value || '',
       }) 
     })
@@ -109,7 +107,7 @@ export class InvItem {
       possessori: this.addItemForm.get('possessori')?.value || '',
       sec_pdci: this.addItemForm.get('sec_pdci')?.value || '',
       stanza: this.addItemForm.get('stanza')?.value || '',
-      customFields, 
+      fieldsItemToSave, 
       modelName:this.modelName
     }
 

@@ -24,7 +24,7 @@ import { AssetModel } from '../../../yaml/home-table';
 export class AddItemDialog {
   loading = false;
   error: string | null = null;
-  //itemToAdd: InventoryItem = {};
+  //itemToAdd: AssetItem = {};
   modelFormCtrl = new FormControl('');
   invalid_field: string = '';
   listModelsName: string[] = [];

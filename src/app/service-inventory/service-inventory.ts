@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AssetModel, InventoryItem } from '../../yaml/home-table';
+import { AssetModel, AssetItem } from '../../yaml/home-table';
 
 @Injectable({
   providedIn: 'root',
@@ -12,17 +12,17 @@ export class ServiceInventory {
   constructor(private http:HttpClient){
 
   }
-  getHomeDataTable(): Observable<InventoryItem[]> {
-    return this.http.get<InventoryItem[]>(`${this.baseUrl}/inventories/readlist`)
+  getHomeDataTable(): Observable<AssetItem[]> {
+    return this.http.get<AssetItem[]>(`${this.baseUrl}/inventories/readlist`)
   }
 
-  addHomeDataTable(itemToAdd: InventoryItem): Observable<InventoryItem> {
+  addHomeDataTable(itemToAdd: AssetItem): Observable<AssetItem> {
     console.log("body:",itemToAdd)
-     return this.http.post<InventoryItem>(`${this.baseUrl}/inventories/addass`,itemToAdd)
+     return this.http.post<AssetItem>(`${this.baseUrl}/inventories/addass`,itemToAdd)
   }
 
-  readOneAss(num_inv?:string): Observable<InventoryItem>{
-    return this.http.get<InventoryItem>(`${this.baseUrl}/inventories/readoneass?num_inv=${num_inv}`)
+  readOneAss(num_inv?:string): Observable<AssetItem>{
+    return this.http.get<AssetItem>(`${this.baseUrl}/inventories/readoneass?num_inv=${num_inv}`)
   }
 
 /************CRUD MODELS**********************/
@@ -49,15 +49,15 @@ createModel(body:AssetModel): Observable<AssetModel>{
 /***********************************************/
 
 /************CRUD ASSETS**********************/
-createAsset(body:InventoryItem): Observable<[]>{
+createAsset(body:AssetItem): Observable<[]>{
     return this.http.post<[]>(`${this.baseUrl}/inventories/assets`,body)
   }
 
-readAssetHome(): Observable<InventoryItem[]>{
-  return this.http.get<InventoryItem[]>(`${this.baseUrl}/inventories/assetshome`)
+readAssetHome(): Observable<AssetItem[]>{
+  return this.http.get<AssetItem[]>(`${this.baseUrl}/inventories/assetshome`)
   }  
 
-readAssetDialog(matricola:string): Observable<InventoryItem>{
-  return this.http.get<InventoryItem>(`${this.baseUrl}/inventories/assetonefull?matricola=${matricola}`)
+readAssetFull(matricola:string): Observable<AssetItem>{
+  return this.http.get<AssetItem>(`${this.baseUrl}/inventories/assetonefull?matricola=${matricola}`)
   } 
 }

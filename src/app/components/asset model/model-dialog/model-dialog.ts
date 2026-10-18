@@ -12,7 +12,7 @@ import { InvItem } from '../../add-item-dialog/inv-item/inv-item';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
-import { AssetModel, FieldsType } from '../../../../yaml/home-table';
+import { AssetModel, FieldsModel } from '../../../../yaml/home-table';
 import { DialogRef } from '@angular/cdk/dialog';
 
 @Component({
@@ -88,10 +88,11 @@ export class ModelDialog {
 
     if(this.modelloForm.valid){
     const fields = this.modelloForm.get('fields') as FormArray;
-    let list_fields : FieldsType[] = [];
+    let list_fields : FieldsModel[] = [];
     
     fields.controls.forEach((x, i) => {
       list_fields[i] = {
+        idField: crypto.randomUUID(),
         nome_campo : x.get('nome_campo')?.value || '',
         tipo_campo : x.get('tipo_campo')?.value || '',
         mandatory: x.get('mandatory')?.value || false,

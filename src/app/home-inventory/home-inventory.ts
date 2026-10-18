@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { InventoryItem } from '../../yaml/home-table';
+import { AssetItem } from '../../yaml/home-table';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ServiceInventory } from '../service-inventory/service-inventory';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -17,6 +17,7 @@ import { ScannerDialog } from '../scanner-dialog/scanner-dialog';
 import { AddItemDialog } from '../components/add-item-dialog/add-item-dialog';
 import { ModelDialog } from '../components/asset model/model-dialog/model-dialog';
 import { InvItem } from '../components/add-item-dialog/inv-item/inv-item';
+import { ReadItemDialog } from '../components/read-item-dialog/read-item-dialog/read-item-dialog';
 
 
 @Component({
@@ -54,7 +55,7 @@ export class HomeInventory {
     'fuori_uso'
   ];
 
-  dataSource = new MatTableDataSource<InventoryItem>();
+  dataSource = new MatTableDataSource<AssetItem>();
   searchCtrl = new FormControl('');
 
   ngOnInit() {
@@ -88,9 +89,9 @@ export class HomeInventory {
       );
     }
 
-    /* openReadItemDialog(matricola:string){
+    openReadItemDialog(matricola:string){
 
-      const dialogRef = this.dialog.open(InvItem,
+      const dialogRef = this.dialog.open(ReadItemDialog,
         {
           width: '50%',
           maxWidth: '95vw',
@@ -98,7 +99,7 @@ export class HomeInventory {
           data: matricola
         }
       );
-    } */
+    }
 
 /* 
     dialogRef.afterClosed().pipe(

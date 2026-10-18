@@ -43,8 +43,8 @@
 </div>
         <mat-divider></mat-divider>
         <h3>CUSTOM FIELDS</h3>
-        <div formArrayName="customFields" class="fields-grid">
-            <ng-container *ngFor="let field of fields; let i = index">
+        <div formArrayName="fieldsItemsCtrl" class="fields-grid">
+            <ng-container *ngFor="let field of modelFields; let i = index">
                 <mat-form-field *ngIf="field.tipo_campo === 'Numerico'" appearance="outline">
                     <mat-label>{{ field.nome_campo }}</mat-label>
                     <input matInput type="number" [formControlName]="i">
