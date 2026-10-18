@@ -12,19 +12,6 @@ export class ServiceInventory {
   constructor(private http:HttpClient){
 
   }
-  getHomeDataTable(): Observable<AssetItem[]> {
-    return this.http.get<AssetItem[]>(`${this.baseUrl}/inventories/readlist`)
-  }
-
-  addHomeDataTable(itemToAdd: AssetItem): Observable<AssetItem> {
-    console.log("body:",itemToAdd)
-     return this.http.post<AssetItem>(`${this.baseUrl}/inventories/addass`,itemToAdd)
-  }
-
-  readOneAss(num_inv?:string): Observable<AssetItem>{
-    return this.http.get<AssetItem>(`${this.baseUrl}/inventories/readoneass?num_inv=${num_inv}`)
-  }
-
 /************CRUD MODELS**********************/
 
 //GET NAME LIST MODEL

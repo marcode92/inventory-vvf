@@ -56,7 +56,7 @@ export class ReadItemDialog {
   ngOnInit() {
     this.serviceInventory.readAssetFull(this.matricola).pipe(
       switchMap(asset =>
-        this.serviceInventory.getModelOneName(asset.modelName).pipe(
+        this.serviceInventory.getModelOneName(asset.modelName || '').pipe(
           map(model => ({ asset, model }))
         ))).subscribe(({ asset, model }) => {
           this.addItemForm.get('annotazioni')?.setValue(asset.annotazioni || '')

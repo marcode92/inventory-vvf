@@ -15,6 +15,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { ServiceInventory } from '../../../service-inventory/service-inventory';
   import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'inv-item',
@@ -36,7 +37,7 @@ export class InvItem {
   listModelsName: string[] = [];
 
   constructor(  
-    public serviceInventory: ServiceInventory, private snackBar: MatSnackBar,  
+    public serviceInventory: ServiceInventory, 
     private cdr: ChangeDetectorRef
 ){
   }
@@ -88,9 +89,17 @@ export class InvItem {
     })
   }
 
-  save(){
-    let itemToSave: AssetItem;
-    let fieldsItemToSave: FieldsItem[] = []; 
+  prepareItem(){
+  let itemToSave: AssetItem;
+  let fieldsItemToSave: FieldsItem[] = []; 
+  return  this.serviceInventory.readAssetFull(this.addItemForm.get('matricola')?.value || '')
+    .pipe(
+      map(item=> {
+      if(item){
+        this.addItemForm.get('matricola')?.setErrors({
+          alreadyExists: true
+        })
+      }      
     this.fieldsItemsCtrl.controls.map((ctrl,i) => {
       fieldsItemToSave.push({
         idField:this.modelFields[i].idField || '',
@@ -112,16 +121,9 @@ export class InvItem {
       fieldsItemToSave, 
       modelName:this.modelName
     }
-
-    this.serviceInventory.createAsset(itemToSave).subscribe(
-      {
-     next: () => { console.log("test")
-      // this.dialogRef.close(true)
-     },
-     error: () => {
-       this.error = "errore durante il salvataggio"
-       this.snackBar.open(this.error)
-     }
-   })
-  }
+    
+    return itemToSave
+  }))
+}
+  
 }

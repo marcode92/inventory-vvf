@@ -77,10 +77,8 @@ export class HomeInventory {
         }
       );
       dialogRef.afterClosed().pipe(
-        tap(result => console.log("result",result)),
       switchMap(() => this.serviceInventory.readAssetHome())
     ).subscribe(data => {
-      console.log("aqui",data)
       this.dataSource.data = data;
     })
     }
@@ -103,29 +101,6 @@ export class HomeInventory {
     })
     }
 
-/* 
-    dialogRef.afterClosed().pipe(
-      switchMap(() => this.serviceInventory.getHomeDataTable())
-    ).subscribe(data => {
-      this.dataSource.data = data;
-    }) */
-
-
- /*  openScanDialog() {
-    const dialogRef = this.dialog.open(ScannerDialog,
-      {
-        width: '50%',
-        maxWidth: '95vw',
-        maxHeight: '90vh',
-
-      }
-    );
-
-    dialogRef.afterClosed().subscribe(data => {
-      this.openDialog(data)
-    })
-  } */
-
   openModelDialog() {
     const dialogRef = this.dialog.open(ModelDialog,
       {
@@ -135,12 +110,6 @@ export class HomeInventory {
 
       }
     );
-
-    dialogRef.afterClosed().pipe(
-      switchMap(() => this.serviceInventory.getHomeDataTable())
-    ).subscribe(data => {
-      this.dataSource.data = data;
-    })
-  }
+ }
 };
 

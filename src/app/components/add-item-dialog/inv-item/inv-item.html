@@ -20,6 +20,9 @@
         <mat-form-field appearance="outline">
             <mat-label>Matricola</mat-label>
             <input matInput type="text" formControlName="matricola" />
+            <mat-error *ngIf="addItemForm.get('nome_modello')?.hasError('alreadyExists')">
+                Matricola già esistente
+            </mat-error>
         </mat-form-field>
         <mat-form-field appearance="outline">
             <mat-label>Annotazioni</mat-label>
@@ -60,11 +63,3 @@
             </ng-container>
         </div>
 </form>
-<!-- 
-<mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Annulla</button>
-
-    <button mat-flat-button (click)="save()">
-        Salva
-    </button>
-</mat-dialog-actions> -->

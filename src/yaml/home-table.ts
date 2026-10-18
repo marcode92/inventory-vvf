@@ -10,7 +10,7 @@ export interface AssetItem {
   last_update?: string,
   fuori_uso?: boolean,
   fieldsItemToSave?: FieldsItem[],
-  modelName: string;
+  modelName?: string;
 }
 
 export interface FieldsItem {
