@@ -7,7 +7,7 @@ export interface AssetItem {
   annotazioni?: string,
   stanza?: string,
   possessori?: string,
-  last_update?: string,
+  last_update?: Date,
   fuori_uso?: boolean,
   fieldsItemToSave?: FieldsItem[],
   modelName?: string;

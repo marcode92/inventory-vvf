@@ -47,4 +47,9 @@ readAssetHome(): Observable<AssetItem[]>{
 readAssetFull(matricola:string): Observable<AssetItem>{
   return this.http.get<AssetItem>(`${this.baseUrl}/inventories/assetonefull?matricola=${matricola}`)
   } 
+
+updateAsset(body:AssetItem, matricola:string): Observable<AssetItem>{
+  return this.http.put<AssetItem>(`${this.baseUrl}/inventories/updateasset?matricola=${matricola}`, body)
+  } 
+
 }

@@ -15,8 +15,8 @@
             </mat-form-field>
         </div>
         
-        <inv-item *ngIf="!select" [modelName]="selectedModel"></inv-item>
-            
+        <inv-item *ngIf="!select && !hasData" [modelName]="selectedModel" (itemToSave)="createItem($event)"></inv-item>
+        <inv-item-file *ngIf="!select && hasData"></inv-item-file>    
         </mat-dialog-content>
 
         <mat-dialog-actions *ngIf="select" align="end">

@@ -12,12 +12,13 @@ import { InvItem } from './inv-item/inv-item';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
-import { AssetModel } from '../../../yaml/home-table';
+import { AssetItem, AssetModel } from '../../../yaml/home-table';
+import { InvItemFile } from './inv-item-file/inv-item-file';
 
 @Component({
   selector: 'add-item-dialog',
   imports: [MatDialogModule, MatButtonModule, ReactiveFormsModule,
-    InvItem, MatFormField, MatInputModule, MatIconModule, CommonModule, 
+    InvItem, InvItemFile, MatFormField, MatInputModule, MatIconModule, CommonModule, 
     MatSelectModule, MatSnackBarModule],
   templateUrl: './add-item-dialog.html',
   styleUrl: './add-item-dialog.scss',
@@ -34,13 +35,19 @@ export class AddItemDialog {
   constructor(private dialogRef: MatDialogRef<AddItemDialog>,
     private serviceInventory: ServiceInventory,
     private snackBar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public dataFromFile: any,
     private dialog: MatDialog) { }
 
   param?: string;
   currentPage: boolean = true;
   select: boolean = true;
   selectedModel = ''
+
+  get hasData(): boolean {
+  return this.dataFromFile != null &&
+         Object.keys(this.dataFromFile).length > 0;
+}
+
   ngOnInit() {
     this.serviceInventory.getModelNames().subscribe(x => {
       this.listModelsName = x
@@ -52,7 +59,6 @@ export class AddItemDialog {
     this.selectedModel = this.modelFormCtrl.value || '';
     this.select = !this.select;
     this.dialogRef.updateSize('900px', '650px');
-    //this.openAssetDialog(modelName);
   }
 
 changeModel(){
@@ -61,40 +67,20 @@ changeModel(){
 }
 
 save(){
-  this.invItem.prepareItem().subscribe(itemToSave =>{
-    if(itemToSave === null ) return
-    if(this.invItem.addItemForm.valid){
-      this.serviceInventory.createAsset(itemToSave).subscribe(
-        {
-          next: () => { console.log("test")
-            this.dialogRef.close(true)
-          },
-          error: () => {
-            this.error = "errore durante il salvataggio"
-            this.snackBar.open(this.error)
-          }
-        })
-      }
-    });
+  this.invItem.prepareItem(); //salva l'item
 }
-  /* openAssetDialog(data: string) {
-    this.dialogRef.close(true)
-    const dialogRef = this.dialog.open(InvItem,
-      {
-        width: '900px',
-        maxWidth: '95vw',
-        height: '650px',
-        maxHeight: '90vh',
-        panelClass: 'custom-dialog',
-        data
-      }
-    );
 
-   dialogRef.afterClosed().subscribe(result => {
-    if (result === true) {
-      this.dialogRef.close(true);
-    }
-  });
-}
-*/  
+createItem(itemToSave: AssetItem){
+  this.serviceInventory.createAsset(itemToSave).subscribe(
+    {
+      next: () => { console.log("test")
+        this.dialogRef.close(true)
+      },
+      error: () => {
+        this.error = "errore durante il salvataggio"
+        this.snackBar.open(this.error)
+      }
+    })
+
+}  
 }

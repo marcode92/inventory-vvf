@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FieldsModel } from '../../../../yaml/home-table';
+import { AssetItem, FieldsItem, FieldsModel } from '../../../../yaml/home-table';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -34,7 +34,7 @@ export class ReadItemDialog {
 
   modelFields: FieldsModel[] = [];
   error: string | null = null;
-
+  
   constructor(private dialogRef: MatDialogRef<ReadItemDialog>,
     @Inject(MAT_DIALOG_DATA) public matricola: string,
     public serviceInventory: ServiceInventory, private snackBar: MatSnackBar) {
@@ -42,10 +42,10 @@ export class ReadItemDialog {
 
   addItemForm = new FormGroup({
     cat_tipo: new FormControl('', [Validators.required]),
-    num_inv: new FormControl('', [Validators.required]),
+    num_inv: new FormControl({value:'', disabled:true}, [Validators.required]),
     sec_pdci: new FormControl('', [Validators.required]),
     denominazione: new FormControl('', [Validators.required]),
-    matricola: new FormControl('', [Validators.required]),
+    matricola: new FormControl({value:'', disabled:true}, [Validators.required]),
     annotazioni: new FormControl('', [Validators.required]),
     stanza: new FormControl('', [Validators.required]),
     possessori: new FormControl('', [Validators.required]),
@@ -63,7 +63,6 @@ export class ReadItemDialog {
           this.addItemForm.get('cat_tipo')?.setValue(asset.cat_tipo || '')
           this.addItemForm.get('denominazione')?.setValue(asset.denominazione || '')
           this.addItemForm.get('out_of_service')?.setValue(asset.fuori_uso || false)
-          /* this.addItemForm.get('last_update')?.setValue(asset.last_update || null) */
           this.addItemForm.get('matricola')?.setValue(asset.matricola || '')
           this.addItemForm.get('num_inv')?.setValue(asset.num_inv || '')
           this.addItemForm.get('possessori')?.setValue(asset.possessori || '')
@@ -89,7 +88,33 @@ export class ReadItemDialog {
         })
   }
 
-  update(){
+  updateAsset(){
     
+    let itemToSave: AssetItem;
+    let fieldsItemToSave: FieldsItem[] = [];
+    
+    this.fieldsItemsCtrl.controls.map((ctrl, i) => {
+      fieldsItemToSave.push({
+        idField: this.modelFields[i].idField || '',
+        value: ctrl.value || '',
+      })
+    })
+    
+    itemToSave = {
+              annotazioni: this.addItemForm.get('annotazioni')?.value || '',
+              cat_tipo: this.addItemForm.get('cat_tipo')?.value || '',
+              denominazione: this.addItemForm.get('denominazione')?.value || '',
+              fuori_uso: this.addItemForm.get('out_of_service')?.value || false,
+              last_update: new Date() || '',
+              num_inv: this.addItemForm.get('num_inv')?.value || '',
+              possessori: this.addItemForm.get('possessori')?.value || '',
+              sec_pdci: this.addItemForm.get('sec_pdci')?.value || '',
+              stanza: this.addItemForm.get('stanza')?.value || '',
+              fieldsItemToSave,
+            }
+            this.serviceInventory.updateAsset(itemToSave, this.matricola).subscribe(x=>{
+              this.dialogRef.close(true);
+            })
+        
   }
 }

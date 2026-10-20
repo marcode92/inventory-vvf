@@ -18,6 +18,7 @@ import { AddItemDialog } from '../components/add-item-dialog/add-item-dialog';
 import { ModelDialog } from '../components/asset model/model-dialog/model-dialog';
 import { InvItem } from '../components/add-item-dialog/inv-item/inv-item';
 import { ReadItemDialog } from '../components/read-item-dialog/read-item-dialog/read-item-dialog';
+import { UploadAssetFile } from '../components/upload-asset-file/upload-asset-file';
 
 
 @Component({
@@ -67,39 +68,40 @@ export class HomeInventory {
       this.dataSource.data = data;
     })
   }
-    openCreateItemDialog(){
+  openCreateItemDialog() {
 
-      const dialogRef = this.dialog.open(AddItemDialog,
-        { 
-          width: '450px',
-          maxWidth: '95vw',
-          maxHeight: '90vh',
-        }
-      );
-      dialogRef.afterClosed().pipe(
+    const dialogRef = this.dialog.open(AddItemDialog,
+      {
+        width: '450px',
+        maxWidth: '95vw',
+        maxHeight: '90vh',
+      }
+    );
+    dialogRef.afterClosed().pipe(
       switchMap(() => this.serviceInventory.readAssetHome())
     ).subscribe(data => {
       this.dataSource.data = data;
     })
-    }
+  }
 
-    openReadItemDialog(matricola:string){
+  openReadItemDialog(matricola: string) {
 
-      const dialogRef = this.dialog.open(ReadItemDialog,
-        {
-          width: '50%',
-          maxWidth: '95vw',
-          maxHeight: '90vh',
-          data: matricola
-        }
-      );
+    const dialogRef = this.dialog.open(ReadItemDialog,
+      {
+        width: '900px',
+        height: '650px',
+        maxWidth: '95vw',
+        maxHeight: '90vh',
+        data: matricola
+      }
+    );
 
-      dialogRef.afterClosed().pipe(
+    dialogRef.afterClosed().pipe(
       switchMap(() => this.serviceInventory.readAssetHome())
     ).subscribe(data => {
       this.dataSource.data = data;
     })
-    }
+  }
 
   openModelDialog() {
     const dialogRef = this.dialog.open(ModelDialog,
@@ -107,9 +109,18 @@ export class HomeInventory {
         width: '900px',
         maxWidth: '95vw',
         maxHeight: '90vh'
-
       }
     );
- }
+  }
+
+   openReadFile() {
+    const dialogRef = this.dialog.open(UploadAssetFile,
+      {
+        width: '900px',
+        maxWidth: '95vw',
+        maxHeight: '90vh'
+      }
+    );
+  }
 };
 

@@ -1,0 +1,23 @@
+.form-container {
+    width: 100%;
+}
+
+.fields-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 20px;
+    align-items: center;
+}
+
+.fields-grid mat-form-field {
+    width: 200px;
+}
+
+mat-divider {
+    margin: 24px 0;
+}
+
+h3 {
+    margin-bottom: 20px;
+    font-weight: 500;
+}
