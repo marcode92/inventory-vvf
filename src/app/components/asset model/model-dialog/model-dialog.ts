@@ -92,7 +92,6 @@ export class ModelDialog {
     
     fields.controls.forEach((x, i) => {
       list_fields[i] = {
-        idField: crypto.randomUUID(),
         nome_campo : x.get('nome_campo')?.value || '',
         tipo_campo : x.get('tipo_campo')?.value || '',
         mandatory: x.get('mandatory')?.value || false,

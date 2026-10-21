@@ -50,7 +50,7 @@ export class AddItemDialog {
 
   ngOnInit() {
     this.serviceInventory.getModelNames().subscribe(x => {
-      this.listModelsName = x
+      this.listModelsName = ['No model',...x,]
       this.selectedModel = this.listModelsName[0];
     })
   }

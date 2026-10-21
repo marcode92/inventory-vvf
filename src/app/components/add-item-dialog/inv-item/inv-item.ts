@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, Output } from '@angular/core';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AssetModel, FieldsItem, FieldsModel, AssetItem } from '../../../../yaml/home-table';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AssetModel, FieldsItem, FieldsModel, AssetItem, TipoCampo } from '../../../../yaml/home-table';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -14,15 +14,15 @@ import { AddMargin } from '../../../../directive/add-margin';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { ServiceInventory } from '../../../service-inventory/service-inventory';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { map } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'inv-item',
   imports: [ReactiveFormsModule, CommonModule, MatTableModule,
     MatCheckboxModule, MatButtonModule, MatCardModule, AddMargin, MatDialogModule,
     MatFormField, MatLabel, MatIcon, MatInputModule, MatDividerModule, MatSlideToggle,
-    MatSnackBarModule],
+    MatSelectModule ],
   templateUrl: './inv-item.html',
   styleUrl: './inv-item.scss',
 })
@@ -33,13 +33,25 @@ export class InvItem {
   get fieldsItemsCtrl(): FormArray<FormControl<string | number | boolean | null>> {
     return this.addItemForm.controls.fieldsItemsCtrl;
   }
+
+  get fieldsEmptyCtrl(): FormArray<FormGroup> {
+    return this.addItemForm.controls.fieldsEmptyCtrl;
+  }
+
+  get selectionField(): FormArray<FormGroup> {
+    return this.addItemForm.controls.fieldsEmptyCtrl;
+  }
+
   modelFields: FieldsModel[] = [];
   error: string | null = null;
   listModelsName: string[] = [];
+  readonly TipoCampo = TipoCampo;
+  tipi: TipoCampo[] = Object.values(TipoCampo);
 
   constructor(
+    private fb: FormBuilder,
     public serviceInventory: ServiceInventory,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef, private snackBar: MatSnackBar
   ) {
   }
 
@@ -54,12 +66,13 @@ export class InvItem {
     possessori: new FormControl('', [Validators.required]),
     out_of_service: new FormControl(false, [Validators.required]),
     fieldsItemsCtrl: new FormArray<FormControl<string | number | boolean | null>>([]),
+    fieldsEmptyCtrl: new FormArray<FormGroup>([]),
   });
 
   ngOnInit() {
     this.serviceInventory.getModelOneName(this.modelName || '').subscribe(dataFields => {
 
-      if (dataFields.campi)
+      if (dataFields && dataFields.campi){
         this.modelFields = dataFields.campi;
 
       this.modelFields.forEach(field => {
@@ -85,11 +98,40 @@ export class InvItem {
             {
               validators: field.mandatory ? [Validators.required] : []
             }))
-      })
+
+          this.fieldsEmptyCtrl.push(this.createField(field.nome_campo, 
+              field.tipo_campo))
+          })
+          this.fieldsEmptyCtrl.push(this.createField())
+
+        }
       this.cdr.detectChanges();
     })
   }
 
+   createField(nomeCampo?:string, tipoCampo?: string | undefined ): FormGroup {
+    return new FormGroup({
+      nome_campo: new FormControl(nomeCampo || '', Validators.required),
+      tipo_campo: new FormControl(tipoCampo, Validators.required),
+      valore: new FormControl<string|number|boolean |null>(null, Validators.required),
+      mandatory: new FormControl(false, Validators.required)
+    })
+  }
+
+addRow() {
+    //const ogg = this.modelloForm.get('fields') as FormArray
+    this.fieldsEmptyCtrl.push(this.createField())
+  }
+
+  removeRow(index:number){
+    if(this.fieldsEmptyCtrl.length > 1)
+      this.fieldsEmptyCtrl.removeAt(index);
+    else
+    {
+      this.error = "Minimo numero righe 1"
+          this.snackBar.open(this.error)
+    }
+  }
 
   prepareItem() {
     let itemToSave: AssetItem;
@@ -101,10 +143,11 @@ export class InvItem {
         })
       } else {
 
-        this.fieldsItemsCtrl.controls.map((ctrl, i) => {
+        this.fieldsEmptyCtrl.controls.map((ctrl, i) => {
           fieldsItemToSave.push({
-            idField: this.modelFields[i].idField || '',
-            value: ctrl.value || '',
+            nome_campo: ctrl.get('nome_campo')?.value,
+            tipo_campo:ctrl.get('tipo_campo')?.value,
+            value: ctrl.get('valore')?.value,
           })
         })
 
