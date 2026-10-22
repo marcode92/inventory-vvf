@@ -44,10 +44,6 @@ export class HomeInventory {
   lastKeyTime = 0;
 
   displayedColumns: string[] = [
-    'cat_tipo',
-    'num_inv',
-    'sec_pdci',
-    'denominazione',
     'matricola',
     'annotazioni',
     'stanza',

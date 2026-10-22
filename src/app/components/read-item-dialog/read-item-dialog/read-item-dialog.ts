@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { AssetItem, FieldsItem, FieldsModel } from '../../../../yaml/home-table';
+import { AssetItem, AssetFields, FieldsModel } from '../../../../yaml/home-table';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -28,89 +28,79 @@ import { AddMargin } from '../../../../directive/add-margin';
 })
 export class ReadItemDialog {
 
-  get fieldsItemsCtrl(): FormArray<FormControl<string | number | boolean | null>> {
-    return this.addItemForm.controls.fieldsItemsCtrl;
-  }
+  get fieldsEmptyCtrl(): FormArray<FormGroup> {
+   return this.addItemForm.controls.fieldsEmptyCtrl;
+ }
 
-  modelFields: FieldsModel[] = [];
+  assetFields: AssetFields[] = [];
   error: string | null = null;
-  
   constructor(private dialogRef: MatDialogRef<ReadItemDialog>,
     @Inject(MAT_DIALOG_DATA) public matricola: string,
     public serviceInventory: ServiceInventory, private snackBar: MatSnackBar) {
   }
 
   addItemForm = new FormGroup({
-    cat_tipo: new FormControl('', [Validators.required]),
-    num_inv: new FormControl({value:'', disabled:true}, [Validators.required]),
-    sec_pdci: new FormControl('', [Validators.required]),
-    denominazione: new FormControl('', [Validators.required]),
     matricola: new FormControl({value:'', disabled:true}, [Validators.required]),
     annotazioni: new FormControl('', [Validators.required]),
     stanza: new FormControl('', [Validators.required]),
     possessori: new FormControl('', [Validators.required]),
     out_of_service: new FormControl(false, [Validators.required]),
-    fieldsItemsCtrl: new FormArray<FormControl<string | number | boolean | null>>([]),
+    fieldsEmptyCtrl: new FormArray<FormGroup>([]),
   });
 
   ngOnInit() {
-    this.serviceInventory.readAssetFull(this.matricola).pipe(
-      switchMap(asset =>
-        this.serviceInventory.getModelOneName(asset.modelName || '').pipe(
-          map(model => ({ asset, model }))
-        ))).subscribe(({ asset, model }) => {
+    this.serviceInventory.readAssetFull(this.matricola).subscribe( asset => {
           this.addItemForm.get('annotazioni')?.setValue(asset.annotazioni || '')
-          this.addItemForm.get('cat_tipo')?.setValue(asset.cat_tipo || '')
-          this.addItemForm.get('denominazione')?.setValue(asset.denominazione || '')
           this.addItemForm.get('out_of_service')?.setValue(asset.fuori_uso || false)
           this.addItemForm.get('matricola')?.setValue(asset.matricola || '')
-          this.addItemForm.get('num_inv')?.setValue(asset.num_inv || '')
           this.addItemForm.get('possessori')?.setValue(asset.possessori || '')
-          this.addItemForm.get('sec_pdci')?.setValue(asset.sec_pdci || '')
           this.addItemForm.get('stanza')?.setValue(asset.stanza || '')
 
-          if (model.campi)
-            this.modelFields = model.campi;
+          if (asset.assetFields)
+            this.assetFields =asset.assetFields;
 
-          this.modelFields.forEach(field => {
+          this.assetFields.forEach(field => {
 
-            let initialValue: string | number | boolean | null;
+            let initialValue: string | number | boolean;
 
-            initialValue =
-              asset.fieldsItemToSave?.find(f => f.idField === field.idField)?.value ?? null
+            initialValue = field.value || ''
 
-            this.fieldsItemsCtrl.push(new FormControl<string | number | boolean | null>
-              (initialValue,
-                {
-                  validators: field.mandatory ? [Validators.required] : []
-                }))
+            this.fieldsEmptyCtrl.push(this.createField(field.nome_campo, 
+              field.tipo_campo))
           })
         })
+  }
+
+ createField(nomeCampo?:string, tipoCampo?: string | undefined ): FormGroup {
+    return new FormGroup({
+      nome_campo: new FormControl(nomeCampo || '', Validators.required),
+      tipo_campo: new FormControl(tipoCampo, Validators.required),
+      valore: new FormControl<string|number|boolean |null>(null, Validators.required),
+      mandatory: new FormControl(false, Validators.required)
+    })
   }
 
   updateAsset(){
     
     let itemToSave: AssetItem;
-    let fieldsItemToSave: FieldsItem[] = [];
+    let assetFields: AssetFields[] = [];
     
-    this.fieldsItemsCtrl.controls.map((ctrl, i) => {
-      fieldsItemToSave.push({
-        idField: this.modelFields[i].idField || '',
+    this.fieldsEmptyCtrl.controls.map((ctrl, i) => {
+      assetFields.push({
+        nome_campo: ctrl.get('nome_campo')?.value,
+        tipo_campo: ctrl.get('tipo_campo')?.value,
         value: ctrl.value || '',
+        mandatory: ctrl.get('mandatory')?.value
       })
     })
     
     itemToSave = {
               annotazioni: this.addItemForm.get('annotazioni')?.value || '',
-              cat_tipo: this.addItemForm.get('cat_tipo')?.value || '',
-              denominazione: this.addItemForm.get('denominazione')?.value || '',
               fuori_uso: this.addItemForm.get('out_of_service')?.value || false,
               last_update: new Date() || '',
-              num_inv: this.addItemForm.get('num_inv')?.value || '',
               possessori: this.addItemForm.get('possessori')?.value || '',
-              sec_pdci: this.addItemForm.get('sec_pdci')?.value || '',
               stanza: this.addItemForm.get('stanza')?.value || '',
-              fieldsItemToSave,
+              assetFields,
             }
             this.serviceInventory.updateAsset(itemToSave, this.matricola).subscribe(x=>{
               this.dialogRef.close(true);

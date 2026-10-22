@@ -1,23 +1,17 @@
 export interface AssetItem {
-  cat_tipo?: string,
-  num_inv?: string,
-  sec_pdci?: string,
-  denominazione?: string,
   matricola?: string,
   annotazioni?: string,
   stanza?: string,
   possessori?: string,
   last_update?: Date,
   fuori_uso?: boolean,
-  fieldsItemToSave?: FieldsItem[],
-  modelName?: string;
+  assetFields?: AssetFields[],
 }
 
-export interface FieldsItem {
+export interface AssetFields {
   nome_campo?: string,
   tipo_campo?:string,
   mandatory?: boolean,
-  idField?:string;
   value?:string | number | boolean,
 }
 
