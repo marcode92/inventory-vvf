@@ -34,13 +34,8 @@ export class InvItem {
     return this.addItemForm.controls.fieldsEmptyCtrl;
   }
 
-  get selectionField(): FormArray<FormGroup> {
-    return this.addItemForm.controls.fieldsEmptyCtrl;
-  }
-
   assetFields: AssetFields[] = [];
   error: string | null = null;
-  listModelsName: string[] = [];
   readonly TipoCampo = TipoCampo;
   tipi: TipoCampo[] = Object.values(TipoCampo);
 
@@ -98,7 +93,7 @@ export class InvItem {
       nome_campo: new FormControl(nomeCampo || '', Validators.required),
       tipo_campo: new FormControl(tipoCampo, Validators.required),
       valore: new FormControl<string|number|boolean |null>(null, Validators.required),
-      mandatory: new FormControl(false, Validators.required)
+      /* choose: new FormControl(false) */
     })
   }
 
@@ -120,13 +115,7 @@ addRow() {
   prepareItem() {
     let itemToSave: AssetItem;
     let assetFields: AssetFields[] = [];
-    this.serviceInventory.readAssetFull(this.addItemForm.get('matricola')?.value || '').subscribe(x => {
-      if (x) {
-        this.addItemForm.get('matricola')?.setErrors({
-          alreadyExists: true
-        })
-      } else {
-
+    
         this.fieldsEmptyCtrl.controls.map((ctrl, i) => {
           assetFields.push({
             nome_campo: ctrl.get('nome_campo')?.value,
@@ -136,6 +125,7 @@ addRow() {
         })
 
         itemToSave = {
+        annotazioni: this.addItemForm.get('annotazioni')?.value || '',
           fuori_uso: this.addItemForm.get('out_of_service')?.value || false,
           last_update: new Date() || '',
           matricola: this.addItemForm.get('matricola')?.value || '',
@@ -145,6 +135,5 @@ addRow() {
         }
         this.itemToSave.emit(itemToSave);
       }
-    })
   }
-}
+

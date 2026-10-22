@@ -8,6 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { async, switchMap } from 'rxjs';
 import { AddItemDialog } from '../add-item-dialog/add-item-dialog';
+import { AssetFields, TipoCampo } from '../../../yaml/home-table';
+import { InvItemFile } from './inv-item-file/inv-item-file';
 
 @Component({
   selector: 'app-upload-asset-file',
@@ -20,7 +22,7 @@ export class UploadAssetFile {
 
   constructor(private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: any,
     private serviceInventory: ServiceInventory,
-    private dialogRef: MatDialogRef<UploadAssetFile>, 
+    private dialogRef: MatDialogRef<UploadAssetFile>,
     private dialog: MatDialog,
     private snackBar: MatSnackBar) {
 
@@ -36,26 +38,41 @@ export class UploadAssetFile {
   async addItem() {
     if (!this.selectedFile) return;
     const content = await this.selectedFile.text();
-    const json = JSON.parse(content);   
+    const json = JSON.parse(content);
     console.log(json);
     this.openCreateItemDialog(json)
     this.dialogRef.close();
   }
 
-  openCreateItemDialog(data:any) {
-  
-      const dialogRef = this.dialog.open(AddItemDialog,
-        {
-          width: '450px',
-          maxWidth: '95vw',
-          maxHeight: '90vh',
-          data
-        }
-      );
-     /*  dialogRef.afterClosed().pipe(
-        switchMap(() => this.serviceInventory.readAssetHome())
-      ).subscribe(data => {
-        this.dataSource.data = data;
-      }) */
-    }
+  openCreateItemDialog(data: any) {
+    let assetItem: AssetFields[] = [];
+    Object.entries(data).forEach(([key, value]) => {
+
+      switch (typeof value) {
+        case 'string':
+          assetItem.push({ nome_campo: key, value: value, tipo_campo: TipoCampo.ALFA })
+          break;
+        case 'number':
+          assetItem.push({ nome_campo: key, value: value, tipo_campo: TipoCampo.NUME })
+          break;
+      }
+    });
+
+
+    console.log(data)
+    const dialogRef = this.dialog.open(InvItemFile,
+      {
+        width: '900px',
+        height: '650px',
+        maxWidth: '95vw',
+        maxHeight: '90vh',
+        data: assetItem
+      }
+    );
+    /*  dialogRef.afterClosed().pipe(
+       switchMap(() => this.serviceInventory.readAssetHome())
+     ).subscribe(data => {
+       this.dataSource.data = data;
+     }) */
+  }
 }

@@ -49,7 +49,7 @@ export class ModelDialog {
       nome_campo: ['', Validators.required],
       tipo_campo: ['', Validators.required],
       limite_max: [0, Validators.required],
-      mandatory: [false, Validators.required]
+      choose: [false, Validators.required]
     })
   }
 
@@ -94,7 +94,7 @@ export class ModelDialog {
       list_fields[i] = {
         nome_campo : x.get('nome_campo')?.value || '',
         tipo_campo : x.get('tipo_campo')?.value || '',
-        mandatory: x.get('mandatory')?.value || false,
+        choose: x.get('choose')?.value || false,
       }
     })
 

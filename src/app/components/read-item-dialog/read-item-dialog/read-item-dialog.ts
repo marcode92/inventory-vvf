@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { AssetItem, AssetFields, FieldsModel } from '../../../../yaml/home-table';
+import { AssetItem, AssetFields, FieldsModel, TipoCampo } from '../../../../yaml/home-table';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -16,13 +16,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { AddMargin } from '../../../../directive/add-margin';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
-  selector: 'app-read-item-dialog',
+  selector: 'read-item-dialog',
   imports: [ReactiveFormsModule, CommonModule, MatTableModule,
     MatCheckboxModule, MatButtonModule, MatCardModule, AddMargin, MatDialogModule,
     MatFormField, MatLabel, MatIcon, MatInputModule, MatDividerModule, MatSlideToggle,
-    MatSnackBarModule],
+    MatSelectModule],
   templateUrl: './read-item-dialog.html',
   styleUrl: './read-item-dialog.scss',
 })
@@ -34,6 +35,9 @@ export class ReadItemDialog {
 
   assetFields: AssetFields[] = [];
   error: string | null = null;
+  readonly TipoCampo = TipoCampo;
+  tipi: TipoCampo[] = Object.values(TipoCampo);
+
   constructor(private dialogRef: MatDialogRef<ReadItemDialog>,
     @Inject(MAT_DIALOG_DATA) public matricola: string,
     public serviceInventory: ServiceInventory, private snackBar: MatSnackBar) {
@@ -76,11 +80,26 @@ export class ReadItemDialog {
       nome_campo: new FormControl(nomeCampo || '', Validators.required),
       tipo_campo: new FormControl(tipoCampo, Validators.required),
       valore: new FormControl<string|number|boolean |null>(null, Validators.required),
-      mandatory: new FormControl(false, Validators.required)
+      choose: new FormControl(false, Validators.required)
     })
   }
 
-  updateAsset(){
+  addRow() {
+    //const ogg = this.modelloForm.get('fields') as FormArray
+    this.fieldsEmptyCtrl.push(this.createField())
+  }
+
+  removeRow(index:number){
+    if(this.fieldsEmptyCtrl.length > 1)
+      this.fieldsEmptyCtrl.removeAt(index);
+    else
+    {
+      this.error = "Minimo numero righe 1"
+          this.snackBar.open(this.error)
+    }
+  }
+  
+  update(){
     
     let itemToSave: AssetItem;
     let assetFields: AssetFields[] = [];
@@ -90,7 +109,7 @@ export class ReadItemDialog {
         nome_campo: ctrl.get('nome_campo')?.value,
         tipo_campo: ctrl.get('tipo_campo')?.value,
         value: ctrl.value || '',
-        mandatory: ctrl.get('mandatory')?.value
+        choose: ctrl.get('choose')?.value
       })
     })
     

@@ -4,13 +4,23 @@
 
 .fields-grid {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 16px 20px;
-    align-items: center;
 }
 
-.fields-grid mat-form-field {
-    width: 200px;
+.field-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: center;
+    width: 100%;
+}
+
+.dialog-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
 }
 
 mat-divider {

@@ -11,7 +11,7 @@ export interface AssetItem {
 export interface AssetFields {
   nome_campo?: string,
   tipo_campo?:string,
-  mandatory?: boolean,
+  choose?: boolean,
   value?:string | number | boolean,
 }
 
@@ -107,7 +107,7 @@ export interface FieldsModel {
   idField?:string,
     nome_campo?: string,
     tipo_campo?:string,
-    mandatory?: boolean,
+    choose?: boolean,
 }
 
 export enum TipoCampo {

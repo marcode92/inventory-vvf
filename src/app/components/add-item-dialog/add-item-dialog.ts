@@ -13,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { AssetItem, AssetModel } from '../../../yaml/home-table';
-import { InvItemFile } from './inv-item-file/inv-item-file';
+import { InvItemFile } from '../upload-asset-file/inv-item-file/inv-item-file';
 
 @Component({
   selector: 'add-item-dialog',
@@ -67,8 +67,26 @@ changeModel(){
 }
 
 save(){
-  this.invItem.prepareItem(); //salva l'item
-}
+  console.log(this.invItem.addItemForm.get('matricola')?.errors);
+  /****QUANDO CAMBI TIPO CAMPO DEVI PULIRE I VALIDATORI */
+  this.invItem.addItemForm.markAllAsTouched();
+  this.invItem.fieldsEmptyCtrl.controls.forEach(x => {
+    if(x.get('tipo_campo')?.value === (this.invItem.TipoCampo.BOOL)){
+     x.get('valore')?.clearValidators();
+     x.get('valore')?.updateValueAndValidity();
+    }
+  })
+
+  this.serviceInventory.readAssetFull(this.invItem.addItemForm.get('matricola')?.value || '').subscribe(x => {
+      if (x) {
+        this.invItem.addItemForm.get('matricola')?.setErrors({
+          alreadyExists: true
+        })
+      } 
+      if(this.invItem.addItemForm.valid){
+        this.invItem.prepareItem(); //salva l'item
+        }
+})}
 
 createItem(itemToSave: AssetItem){
   this.serviceInventory.createAsset(itemToSave).subscribe(
