@@ -35,7 +35,6 @@ export class AddItemDialog {
   constructor(private dialogRef: MatDialogRef<AddItemDialog>,
     private serviceInventory: ServiceInventory,
     private snackBar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) public dataFromFile: any,
     private dialog: MatDialog) { }
 
   param?: string;
@@ -43,10 +42,6 @@ export class AddItemDialog {
   select: boolean = true;
   selectedModel = ''
 
-  get hasData(): boolean {
-  return this.dataFromFile != null &&
-         Object.keys(this.dataFromFile).length > 0;
-}
 
   ngOnInit() {
     this.serviceInventory.getModelNames().subscribe(x => {

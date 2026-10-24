@@ -1,20 +1,21 @@
 <div mat-dialog-title>UPLOAD FILE</div>
-
 <mat-dialog-content appearance="outline" class="dialog-container">
-    <input 
-        #fileinput
-        type="file" 
-        accept=".json, application/json"
-        (change)="onFileSelected($event)"
-        hidden>
+    <div *ngIf="!select">
+        <input #fileinput type="file" accept=".json, application/json" (change)="onFileSelected($event)" hidden>
         <div class="display-row">
             <button mat-raised-button color="primary" (click)="fileinput.click()"> select file</button>
             <div *ngIf="selectedFile">File selected: {{selectedFile?.name}}</div>
         </div>
+    </div>
+    <div *ngIf="select">
+        <inv-item-file (itemToSave)="createItem($event)" [fileData]="assetFields"></inv-item-file>
+    </div>
 </mat-dialog-content>
-<mat-dialog-actions align="end">
+<mat-dialog-actions *ngIf="!select" align="end">
     <button mat-button mat-dialog-close>Annulla</button>
-    <button mat-raised-button color="primary" 
-    [disabled]="!selectedFile" 
-    (click)="addItem()">ADD ITEM</button>
+    <button mat-raised-button color="primary" [disabled]="!selectedFile" (click)="addItem()">ADD ITEM</button>
+</mat-dialog-actions>
+<mat-dialog-actions *ngIf="select" class="dialog-actions" align="end">
+    <button mat-button mat-dialog-close>Annulla</button>
+    <button mat-raised-button color="primary" (click)="save()">OK</button>
 </mat-dialog-actions>

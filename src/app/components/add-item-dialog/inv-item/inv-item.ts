@@ -61,27 +61,9 @@ export class InvItem {
         this.assetFields = dataFields.campi;
 
       this.assetFields.forEach(field => {
-
-        let initialValue: string | number | boolean;
-
-        switch (field.tipo_campo) {
-          case 'Numerico':
-            initialValue = 0;
-            break;
-          case 'Alfanumerico':
-            initialValue = ''
-            break;
-          case 'Decisionale':
-            initialValue = false
-            break;
-          default:
-            initialValue = ''
-        }
-
           this.fieldsEmptyCtrl.push(this.createField(field.nome_campo, 
               field.tipo_campo))
           })
-          
         }
         this.cdr.detectChanges();
       })
