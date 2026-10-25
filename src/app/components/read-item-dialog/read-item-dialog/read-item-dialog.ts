@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, ViewChild } from '@angular/core';
 import { AssetItem, Fields, TipoCampo } from '../../../../yaml/home-table';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -17,34 +17,39 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { AddMargin } from '../../../../directive/add-margin';
 import { MatSelectModule } from '@angular/material/select';
+import { InvItem } from '../../add-item-dialog/inv-item/inv-item';
 
 @Component({
   selector: 'read-item-dialog',
   imports: [ReactiveFormsModule, CommonModule, MatTableModule,
     MatCheckboxModule, MatButtonModule, MatCardModule, AddMargin, MatDialogModule,
     MatFormField, MatLabel, MatIcon, MatInputModule, MatDividerModule, MatSlideToggle,
-    MatSelectModule],
+    MatSelectModule, InvItem],
   templateUrl: './read-item-dialog.html',
   styleUrl: './read-item-dialog.scss',
 })
 export class ReadItemDialog {
 
   get fieldsEmptyCtrl(): FormArray<FormGroup> {
-   return this.addItemForm.controls.fieldsEmptyCtrl;
- }
+    return this.addItemForm.controls.fieldsEmptyCtrl;
+  }
+  @ViewChild(InvItem) invItem!: InvItem;
 
   assetFields: Fields[] = [];
   error: string | null = null;
   readonly TipoCampo = TipoCampo;
   tipi: TipoCampo[] = Object.values(TipoCampo);
+  formRef: AssetItem = {}
+  select: boolean = false
 
   constructor(private dialogRef: MatDialogRef<ReadItemDialog>,
     @Inject(MAT_DIALOG_DATA) public matricola: string,
-    public serviceInventory: ServiceInventory, private snackBar: MatSnackBar) {
+    public serviceInventory: ServiceInventory, private snackBar: MatSnackBar,
+    private cdr: ChangeDetectorRef) {
   }
 
   addItemForm = new FormGroup({
-    matricola: new FormControl({value:'', disabled:true}, [Validators.required]),
+    matricola: new FormControl({ value: '', disabled: true }, [Validators.required]),
     annotazioni: new FormControl('', [Validators.required]),
     stanza: new FormControl('', [Validators.required]),
     possessori: new FormControl('', [Validators.required]),
@@ -53,75 +58,48 @@ export class ReadItemDialog {
   });
 
   ngOnInit() {
-    this.serviceInventory.readAssetFull(this.matricola).subscribe( asset => {
-          this.addItemForm.get('annotazioni')?.setValue(asset.annotazioni || '')
-          this.addItemForm.get('out_of_service')?.setValue(asset.fuori_uso || false)
-          this.addItemForm.get('matricola')?.setValue(asset.matricola || '')
-          this.addItemForm.get('possessori')?.setValue(asset.possessori || '')
-          this.addItemForm.get('stanza')?.setValue(asset.stanza || '')
-
-          if (asset.assetFields)
-            this.assetFields =asset.assetFields;
-
-          this.assetFields.forEach(field => {
-
-            let initialValue: string | number | boolean;
-
-            initialValue = field.value || ''
-
-            this.fieldsEmptyCtrl.push(this.createField(field.nome_campo, 
-              field.tipo_campo))
-          })
-        })
-  }
-
- createField(nomeCampo?:string, tipoCampo?: string | undefined ): FormGroup {
-    return new FormGroup({
-      nome_campo: new FormControl(nomeCampo || '', Validators.required),
-      tipo_campo: new FormControl(tipoCampo, Validators.required),
-      valore: new FormControl<string|number|boolean |null>(null, Validators.required),
+    this.serviceInventory.readAssetFull(this.matricola).subscribe(dataFields => {
+       this.formRef = {
+        annotazioni: dataFields.annotazioni,
+        fuori_uso: dataFields.fuori_uso,
+        last_update: dataFields.last_update,
+        matricola: dataFields.matricola,
+        possessori: dataFields.possessori,
+        stanza: dataFields.stanza,
+        assetFields: dataFields.assetFields,
+        disableMatricola: true
+      }
+      this.select = true;
+      this.cdr.detectChanges();
     })
   }
+  save() {
+    /****QUANDO CAMBI TIPO CAMPO DEVI PULIRE I VALIDATORI */
+    this.invItem.addItemForm.markAllAsTouched();
+    this.invItem.fieldsEmptyCtrl.controls.forEach(x => {
+      if (x.get('tipo_campo')?.value === (this.invItem.TipoCampo.BOOL)) {
+        x.get('valore')?.clearValidators();
+        x.get('valore')?.updateValueAndValidity();
+      }
+    })
 
-  addRow() {
-    //const ogg = this.modelloForm.get('fields') as FormArray
-    this.fieldsEmptyCtrl.push(this.createField())
-  }
-
-  removeRow(index:number){
-    if(this.fieldsEmptyCtrl.length > 1)
-      this.fieldsEmptyCtrl.removeAt(index);
-    else
-    {
-      this.error = "Minimo numero righe 1"
-          this.snackBar.open(this.error)
+    if (this.invItem.addItemForm.valid) {
+      this.invItem.prepareItem(); //salva l'item
     }
   }
-  
-  update(){
-    
-    let itemToSave: AssetItem;
-    let assetFields: Fields[] = [];
-    
-    this.fieldsEmptyCtrl.controls.map((ctrl, i) => {
-      assetFields.push({
-        nome_campo: ctrl.get('nome_campo')?.value,
-        tipo_campo: ctrl.get('tipo_campo')?.value,
-        value: ctrl.value || '',
+
+
+  updateItem(itemToSave: AssetItem) {
+    this.serviceInventory.updateAsset(itemToSave, this.matricola).subscribe(
+      {
+        next: () => {
+          console.log("test")
+          this.dialogRef.close(true)
+        },
+        error: () => {
+          this.error = "errore durante il salvataggio"
+          this.snackBar.open(this.error)
+        }
       })
-    })
-    
-    itemToSave = {
-              annotazioni: this.addItemForm.get('annotazioni')?.value || '',
-              fuori_uso: this.addItemForm.get('out_of_service')?.value || false,
-              last_update: new Date() || '',
-              possessori: this.addItemForm.get('possessori')?.value || '',
-              stanza: this.addItemForm.get('stanza')?.value || '',
-              assetFields,
-            }
-            this.serviceInventory.updateAsset(itemToSave, this.matricola).subscribe(x=>{
-              this.dialogRef.close(true);
-            })
-        
   }
 }

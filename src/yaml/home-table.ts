@@ -6,6 +6,7 @@ export interface AssetItem {
   last_update?: Date,
   fuori_uso?: boolean,
   assetFields?: Fields[],
+  disableMatricola?:boolean,
 }
 
 export interface Fields {

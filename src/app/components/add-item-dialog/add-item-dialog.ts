@@ -13,12 +13,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { AssetItem, AssetModel } from '../../../yaml/home-table';
-import { InvItemFile } from '../upload-asset-file/inv-item-file/inv-item-file';
 
 @Component({
   selector: 'add-item-dialog',
   imports: [MatDialogModule, MatButtonModule, ReactiveFormsModule,
-    InvItem, InvItemFile, MatFormField, MatInputModule, MatIconModule, CommonModule, 
+    InvItem, MatFormField, MatInputModule, MatIconModule, CommonModule, 
     MatSelectModule, MatSnackBarModule],
   templateUrl: './add-item-dialog.html',
   styleUrl: './add-item-dialog.scss',

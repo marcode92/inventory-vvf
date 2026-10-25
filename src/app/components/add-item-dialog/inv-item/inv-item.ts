@@ -61,15 +61,20 @@ export class InvItem {
         possessori: this.assetRef.possessori || '',
         out_of_service: this.assetRef.fuori_uso || false
     })
-    
+    if (this.assetRef.disableMatricola) {
+  this.addItemForm.get('matricola')?.disable();
+} else {
+  this.addItemForm.get('matricola')?.enable();
+}
       if (this.assetRef && this.assetRef.assetFields){
         this.assetFields = this.assetRef.assetFields;
 
       this.assetFields.forEach(field => {
           this.fieldsEmptyCtrl.push(this.createField(field.nome_campo, 
-              field.tipo_campo))
+              field.tipo_campo, field.value ))
           })
         }
+        if(this.fieldsEmptyCtrl && this.fieldsEmptyCtrl.length === 0)
       this.fieldsEmptyCtrl.push(this.createField())
   }
 
@@ -78,6 +83,7 @@ export class InvItem {
       nome_campo: new FormControl(nomeCampo, Validators.required),
       tipo_campo: new FormControl(tipoCampo, Validators.required),
       valore: new FormControl<string|number|boolean |null>(value || '', Validators.required),
+
     })
   }
 
