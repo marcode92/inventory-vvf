@@ -8,22 +8,22 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { async, switchMap } from 'rxjs';
 import { AddItemDialog } from '../add-item-dialog/add-item-dialog';
-import { AssetFields, AssetItem, TipoCampo } from '../../../yaml/home-table';
-import { InvItemFile } from './inv-item-file/inv-item-file';
+import { Fields, AssetItem, TipoCampo } from '../../../yaml/home-table';
+import { InvItem } from '../add-item-dialog/inv-item/inv-item';
 
 @Component({
   selector: 'app-upload-asset-file',
-  imports: [MatDialogModule, MatButtonModule, CommonModule, InvItemFile],
+  imports: [MatDialogModule, MatButtonModule, CommonModule, InvItem],
   templateUrl: './upload-asset-file.html',
   styleUrl: './upload-asset-file.scss',
 })
 export class UploadAssetFile {
-  select: boolean = false;
+  select: boolean = true;
   selectedFile: File | null = null;
-    @ViewChild(InvItemFile) invItemFile!: InvItemFile;
+    @ViewChild(InvItem) invItem!: InvItem;
     error: string | null = null;
-  assetFields: AssetFields[] = [];
-
+  dataFields: Fields[] = [];
+  formRef: AssetItem = {}
   constructor(private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: any,
     private serviceInventory: ServiceInventory,
     private dialogRef: MatDialogRef<UploadAssetFile>,
@@ -45,46 +45,56 @@ export class UploadAssetFile {
     const content = await this.selectedFile.text();
     const json = JSON.parse(content);
     console.log(json);
-    this.openCreateItemDialog(json)
+    this.createItemFile(json)
   }
 
-  openCreateItemDialog(data: any) {
+  createItemFile(data: any) {
     Object.entries(data).forEach(([key, value]) => {
 
       switch (typeof value) {
         case 'string':
-          this.assetFields.push({ nome_campo: key, value: value, tipo_campo: TipoCampo.ALFA })
+          this.dataFields.push({ nome_campo: key, value: value, tipo_campo: TipoCampo.ALFA })
           break;
         case 'number':
-          this.assetFields.push({ nome_campo: key, value: value, tipo_campo: TipoCampo.NUME })
+          this.dataFields.push({ nome_campo: key, value: value, tipo_campo: TipoCampo.NUME })
           break;
       }
     });
-    this.select = true;
+    
+        this.formRef = {
+          annotazioni: '',
+          fuori_uso: false,
+          last_update: new Date(),
+          matricola: '',
+          possessori: '',
+          stanza: '',
+          assetFields: this.dataFields,
+        }
+
+    this.select = false;
     this.cdr.detectChanges();
     this.dialogRef.updateSize('900px', '650px');
   }
 
   
   save(){
-    console.log(this.invItemFile.addItemForm.get('matricola')?.errors);
     /****QUANDO CAMBI TIPO CAMPO DEVI PULIRE I VALIDATORI */
-    this.invItemFile.addItemForm.markAllAsTouched();
-    this.invItemFile.fieldsEmptyCtrl.controls.forEach(x => {
-      if(x.get('tipo_campo')?.value === (this.invItemFile.TipoCampo.BOOL)){
+    this.invItem.addItemForm.markAllAsTouched();
+    this.invItem.fieldsEmptyCtrl.controls.forEach(x => {
+      if(x.get('tipo_campo')?.value === (this.invItem.TipoCampo.BOOL)){
        x.get('valore')?.clearValidators();
        x.get('valore')?.updateValueAndValidity();
       }
     })
   
-    this.serviceInventory.readAssetFull(this.invItemFile.addItemForm.get('matricola')?.value || '').subscribe(x => {
+    this.serviceInventory.readAssetFull(this.invItem.addItemForm.get('matricola')?.value || '').subscribe(x => {
         if (x) {
-          this.invItemFile.addItemForm.get('matricola')?.setErrors({
+          this.invItem.addItemForm.get('matricola')?.setErrors({
             alreadyExists: true
           })
         } 
-        if(this.invItemFile.addItemForm.valid){
-          this.invItemFile.prepareItem(); //salva l'item
+        if(this.invItem.addItemForm.valid){
+          this.invItem.prepareItem(); //salva l'item
           }
   })}
   

@@ -12,7 +12,7 @@ import { InvItem } from '../../add-item-dialog/inv-item/inv-item';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatSelectModule } from '@angular/material/select';
-import { AssetModel, FieldsModel } from '../../../../yaml/home-table';
+import { AssetModel, Fields } from '../../../../yaml/home-table';
 import { DialogRef } from '@angular/cdk/dialog';
 
 @Component({
@@ -48,8 +48,6 @@ export class ModelDialog {
     return this.fb.group({
       nome_campo: ['', Validators.required],
       tipo_campo: ['', Validators.required],
-      limite_max: [0, Validators.required],
-      choose: [false, Validators.required]
     })
   }
 
@@ -88,13 +86,12 @@ export class ModelDialog {
 
     if(this.modelloForm.valid){
     const fields = this.modelloForm.get('fields') as FormArray;
-    let list_fields : FieldsModel[] = [];
+    let list_fields : Fields[] = [];
     
     fields.controls.forEach((x, i) => {
       list_fields[i] = {
         nome_campo : x.get('nome_campo')?.value || '',
         tipo_campo : x.get('tipo_campo')?.value || '',
-        choose: x.get('choose')?.value || false,
       }
     })
 

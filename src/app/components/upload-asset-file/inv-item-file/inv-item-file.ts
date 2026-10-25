@@ -1,9 +1,9 @@
-import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ServiceInventory } from '../../../service-inventory/service-inventory';
 import { FormGroup, FormControl, Validators, FormArray, ReactiveFormsModule } from '@angular/forms';
-import { AssetItem, AssetFields, TipoCampo } from '../../../../yaml/home-table';
-import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { AssetItem, Fields, TipoCampo } from '../../../../yaml/home-table';
+import { MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -28,7 +28,7 @@ import { DialogRef } from '@angular/cdk/dialog';
   styleUrl: './inv-item-file.scss',
 })
 export class InvItemFile {
-  @Input() fileData!: AssetFields[] ;
+  @Input() fileData!: Fields[] ;
   @Output() itemToSave = new EventEmitter<AssetItem>();
 
   get fieldsEmptyCtrl(): FormArray<FormGroup> {
@@ -36,13 +36,13 @@ export class InvItemFile {
   }
 
   error: string | null = null;
-  assetFields: AssetFields[] = []
+  assetFields: Fields[] = []
   readonly TipoCampo = TipoCampo;
   tipi: TipoCampo[] = Object.values(TipoCampo);
 
   constructor(public serviceInventory: ServiceInventory,
     private cdr: ChangeDetectorRef, private snackBar: MatSnackBar,
-    /* @Inject(MAT_DIALOG_DATA) public dataFields: AssetFields[], */ private dialogRef: DialogRef) { }
+    /* @Inject(MAT_DIALOG_DATA) public dataFields: Fields[], */ private dialogRef: DialogRef) { }
 
   addItemForm = new FormGroup({
     matricola: new FormControl('', [Validators.required]),
@@ -73,7 +73,6 @@ export class InvItemFile {
       nome_campo: new FormControl(nomeCampo || '', Validators.required),
       tipo_campo: new FormControl(tipoCampo, Validators.required),
       valore: new FormControl(valore, Validators.required),
-      /* choose: new FormControl(false) */
     })
   }
 
@@ -93,7 +92,7 @@ export class InvItemFile {
 
    prepareItem() {
     let itemToSave: AssetItem;
-    let assetFields: AssetFields[] = [];
+    let assetFields: Fields[] = [];
     
         this.fieldsEmptyCtrl.controls.map((ctrl, i) => {
           assetFields.push({

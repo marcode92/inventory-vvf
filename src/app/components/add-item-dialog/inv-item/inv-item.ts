@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Inject, Input, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AssetModel, AssetFields, FieldsModel, AssetItem, TipoCampo } from '../../../../yaml/home-table';
+import { Fields, AssetItem, TipoCampo } from '../../../../yaml/home-table';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -27,14 +27,14 @@ import { MatSelectModule } from '@angular/material/select';
   styleUrl: './inv-item.scss',
 })
 export class InvItem {
-  @Input() modelName!: string;
+  @Input() assetRef!: AssetItem;
   @Output() itemToSave = new EventEmitter<AssetItem>();
 
   get fieldsEmptyCtrl(): FormArray<FormGroup> {
     return this.addItemForm.controls.fieldsEmptyCtrl;
   }
 
-  assetFields: AssetFields[] = [];
+  assetFields: Fields[] = [];
   error: string | null = null;
   readonly TipoCampo = TipoCampo;
   tipi: TipoCampo[] = Object.values(TipoCampo);
@@ -44,21 +44,24 @@ export class InvItem {
     private cdr: ChangeDetectorRef, private snackBar: MatSnackBar
   ) {
   }
-
   addItemForm = new FormGroup({
-    matricola: new FormControl('', [Validators.required]),
+    matricola: new FormControl('' , [Validators.required]),
     annotazioni: new FormControl('', [Validators.required]),
     stanza: new FormControl('', [Validators.required]),
     possessori: new FormControl('', [Validators.required]),
     out_of_service: new FormControl(false, [Validators.required]),
     fieldsEmptyCtrl: new FormArray<FormGroup>([]),
   });
-
+  
   ngOnInit() {
-    this.serviceInventory.getModelOneName(this.modelName || '').subscribe(dataFields => {
-
-      if (dataFields && dataFields.campi){
-        this.assetFields = dataFields.campi;
+    this.addItemForm.get('matricola')?.setValue(this.assetRef.matricola || '')
+    this.addItemForm.get('annotazioni')?.setValue(this.assetRef.annotazioni || '')
+    this.addItemForm.get('stanza')?.setValue(this.assetRef.stanza || '')
+    this.addItemForm.get('possessori')?.setValue(this.assetRef.possessori || '')
+    
+    console.log("qui -> ",this.assetRef);
+      if (this.assetRef && this.assetRef.assetFields){
+        this.assetFields = this.assetRef.assetFields;
 
       this.assetFields.forEach(field => {
           this.fieldsEmptyCtrl.push(this.createField(field.nome_campo, 
@@ -66,16 +69,14 @@ export class InvItem {
           })
         }
         this.cdr.detectChanges();
-      })
       this.fieldsEmptyCtrl.push(this.createField())
   }
 
-   createField(nomeCampo?:string, tipoCampo?: string | undefined ): FormGroup {
+   createField(nomeCampo?:string, tipoCampo?: string | undefined, value?: string | boolean | number ): FormGroup {
     return new FormGroup({
-      nome_campo: new FormControl(nomeCampo || '', Validators.required),
+      nome_campo: new FormControl(nomeCampo, Validators.required),
       tipo_campo: new FormControl(tipoCampo, Validators.required),
-      valore: new FormControl<string|number|boolean |null>(null, Validators.required),
-      /* choose: new FormControl(false) */
+      valore: new FormControl<string|number|boolean |null>(value || '', Validators.required),
     })
   }
 
@@ -96,7 +97,7 @@ addRow() {
 
   prepareItem() {
     let itemToSave: AssetItem;
-    let assetFields: AssetFields[] = [];
+    let assetFields: Fields[] = [];
     
         this.fieldsEmptyCtrl.controls.map((ctrl, i) => {
           assetFields.push({

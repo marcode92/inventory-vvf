@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { AssetItem, AssetFields, FieldsModel, TipoCampo } from '../../../../yaml/home-table';
+import { AssetItem, Fields, TipoCampo } from '../../../../yaml/home-table';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -33,7 +33,7 @@ export class ReadItemDialog {
    return this.addItemForm.controls.fieldsEmptyCtrl;
  }
 
-  assetFields: AssetFields[] = [];
+  assetFields: Fields[] = [];
   error: string | null = null;
   readonly TipoCampo = TipoCampo;
   tipi: TipoCampo[] = Object.values(TipoCampo);
@@ -80,7 +80,6 @@ export class ReadItemDialog {
       nome_campo: new FormControl(nomeCampo || '', Validators.required),
       tipo_campo: new FormControl(tipoCampo, Validators.required),
       valore: new FormControl<string|number|boolean |null>(null, Validators.required),
-      choose: new FormControl(false, Validators.required)
     })
   }
 
@@ -102,14 +101,13 @@ export class ReadItemDialog {
   update(){
     
     let itemToSave: AssetItem;
-    let assetFields: AssetFields[] = [];
+    let assetFields: Fields[] = [];
     
     this.fieldsEmptyCtrl.controls.map((ctrl, i) => {
       assetFields.push({
         nome_campo: ctrl.get('nome_campo')?.value,
         tipo_campo: ctrl.get('tipo_campo')?.value,
         value: ctrl.value || '',
-        choose: ctrl.get('choose')?.value
       })
     })
     

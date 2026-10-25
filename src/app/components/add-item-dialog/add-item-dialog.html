@@ -16,7 +16,7 @@
         </div>
         
         <inv-item *ngIf="!select" 
-        [modelName]="selectedModel" 
+        [assetRef]="formRef" 
         (itemToSave)="createItem($event)"></inv-item>
         </mat-dialog-content>
 
