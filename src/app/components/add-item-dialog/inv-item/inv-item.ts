@@ -54,12 +54,14 @@ export class InvItem {
   });
   
   ngOnInit() {
-    this.addItemForm.get('matricola')?.setValue(this.assetRef.matricola || '')
-    this.addItemForm.get('annotazioni')?.setValue(this.assetRef.annotazioni || '')
-    this.addItemForm.get('stanza')?.setValue(this.assetRef.stanza || '')
-    this.addItemForm.get('possessori')?.setValue(this.assetRef.possessori || '')
+    this.addItemForm.patchValue({
+        matricola: this.assetRef.matricola || '',
+        annotazioni: this.assetRef.annotazioni || '',
+        stanza: this.assetRef.stanza || '',
+        possessori: this.assetRef.possessori || '',
+        out_of_service: this.assetRef.fuori_uso || false
+    })
     
-    console.log("qui -> ",this.assetRef);
       if (this.assetRef && this.assetRef.assetFields){
         this.assetFields = this.assetRef.assetFields;
 
@@ -68,7 +70,6 @@ export class InvItem {
               field.tipo_campo))
           })
         }
-        this.cdr.detectChanges();
       this.fieldsEmptyCtrl.push(this.createField())
   }
 
