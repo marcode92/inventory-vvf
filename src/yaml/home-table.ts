@@ -25,3 +25,9 @@ export enum TipoCampo {
   ALFA = 'Alfanumerico',
   BOOL = 'Decisionale',
 }
+
+export enum MenuAction {
+  CREATE_ASSET = 'createasset',
+  CREATE_MODEL = 'createmodel',
+  UPLOAD_JSON = 'uploadfile'
+}
