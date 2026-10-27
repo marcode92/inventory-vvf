@@ -17,7 +17,7 @@ import { AssetItem, AssetModel } from '../../../yaml/home-table';
 @Component({
   selector: 'add-item-dialog',
   imports: [MatDialogModule, MatButtonModule, ReactiveFormsModule,
-    InvItem, MatFormField, MatInputModule, MatIconModule, CommonModule, 
+    InvItem, MatFormField, MatInputModule, MatIconModule, CommonModule,
     MatSelectModule, MatSnackBarModule],
   templateUrl: './add-item-dialog.html',
   styleUrl: './add-item-dialog.scss',
@@ -35,7 +35,7 @@ export class AddItemDialog {
   selectedModel = ''
 
   @ViewChild(InvItem) invItem!: InvItem;
-  
+
   constructor(private dialogRef: MatDialogRef<AddItemDialog>,
     private serviceInventory: ServiceInventory,
     private cdr: ChangeDetectorRef,
@@ -46,7 +46,7 @@ export class AddItemDialog {
 
   ngOnInit() {
     this.serviceInventory.getModelNames().subscribe(x => {
-      this.listModelsName = ['No model',...x,]
+      this.listModelsName = ['No model', ...x,]
       this.selectedModel = this.listModelsName[0];
     })
   }
@@ -54,51 +54,61 @@ export class AddItemDialog {
   search() {
     this.selectedModel = this.modelFormCtrl.value || '';
     this.serviceInventory.getModelOneName(this.selectedModel || '').subscribe(dataFields => {
+      this.formRef = {
+        annotazioni: '',
+        fuori_uso: false,
+        last_update: new Date(),
+        matricola: '',
+        possessori: '',
+        stanza: '',
+        assetFields: dataFields && dataFields.campi || undefined,
+      }
+      this.select = false;
+      this.dialogRef.updateSize('900px', '650px');
+      this.cdr.detectChanges();
+    })
+  }
 
-          this.select = false;
-          this.cdr.detectChanges();
-          this.dialogRef.updateSize('900px', '650px');
-  })
-}
-
-changeModel(){
+  changeModel() {
     this.select = !this.select;
     this.dialogRef.updateSize('450px', 'auto');
-      
-}
 
-save(){
-  /****QUANDO CAMBI TIPO CAMPO DEVI PULIRE I VALIDATORI */
-  this.invItem.addItemForm.markAllAsTouched();
-  this.invItem.fieldsEmptyCtrl.controls.forEach(x => {
-    if(x.get('tipo_campo')?.value === (this.invItem.TipoCampo.BOOL)){
-     x.get('valore')?.clearValidators();
-     x.get('valore')?.updateValueAndValidity();
-    }
-  })
+  }
 
-  this.serviceInventory.readAssetFull(this.invItem.addItemForm.get('matricola')?.value || '').subscribe(x => {
+  save() {
+    /****QUANDO CAMBI TIPO CAMPO DEVI PULIRE I VALIDATORI */
+    this.invItem.addItemForm.markAllAsTouched();
+    this.invItem.fieldsEmptyCtrl.controls.forEach(x => {
+      if (x.get('tipo_campo')?.value === (this.invItem.TipoCampo.BOOL)) {
+        x.get('valore')?.clearValidators();
+        x.get('valore')?.updateValueAndValidity();
+      }
+    })
+    const matricola = (this.invItem.addItemForm.get('matricola')?.value)?.toLowerCase()
+    this.serviceInventory.readAssetFull(matricola || '').subscribe(x => {
       if (x) {
         this.invItem.addItemForm.get('matricola')?.setErrors({
           alreadyExists: true
         })
-      } 
-      if(this.invItem.addItemForm.valid){
+      }
+      if (this.invItem.addItemForm.valid) {
         this.invItem.prepareItem(); //salva l'item
-        }
-})}
-
-createItem(itemToSave: AssetItem){
-  this.serviceInventory.createAsset(itemToSave).subscribe(
-    {
-      next: () => { console.log("test")
-        this.dialogRef.close(true)
-      },
-      error: () => {
-        this.error = "errore durante il salvataggio"
-        this.snackBar.open(this.error)
       }
     })
+  }
 
-}  
+  createItem(itemToSave: AssetItem) {
+    this.serviceInventory.createAsset(itemToSave).subscribe(
+      {
+        next: () => {
+          console.log("test")
+          this.dialogRef.close(true)
+        },
+        error: () => {
+          this.error = "errore durante il salvataggio"
+          this.snackBar.open(this.error)
+        }
+      })
+
+  }
 }

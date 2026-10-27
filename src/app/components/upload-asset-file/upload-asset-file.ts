@@ -86,8 +86,9 @@ export class UploadAssetFile {
        x.get('valore')?.updateValueAndValidity();
       }
     })
-  
-    this.serviceInventory.readAssetFull(this.invItem.addItemForm.get('matricola')?.value || '').subscribe(x => {
+      const matricola = (this.invItem.addItemForm.get('matricola')?.value)?.toLowerCase()
+
+    this.serviceInventory.readAssetFull(matricola || '').subscribe(x => {
         if (x) {
           this.invItem.addItemForm.get('matricola')?.setErrors({
             alreadyExists: true

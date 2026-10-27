@@ -52,7 +52,8 @@ export class HomeInventory {
     'stanza',
     'possessori',
     'last_update',
-    'fuori_uso'
+    'fuori_uso',
+    'delete'
   ];
 
   dataSource = new MatTableDataSource<AssetItem>();
@@ -132,9 +133,10 @@ export class HomeInventory {
   openModelDialog() {
     const dialogRef = this.dialog.open(ModelDialog,
       {
-        width: '900px',
+         width: '900px',
+        height: '650px',
         maxWidth: '95vw',
-        maxHeight: '90vh'
+        maxHeight: '90vh',
       }
     );
   }
@@ -147,6 +149,17 @@ export class HomeInventory {
         maxHeight: '90vh'
       }
     );
+
+    dialogRef.afterClosed().pipe(
+      switchMap(() => this.serviceInventory.readAssetHome())
+    ).subscribe(data => {
+      this.dataSource.data = data;
+    })
+  }
+
+   removeRow(index: number) {
+      this.dataSource.data.splice(index,1);
+      this.dataSource.data = [...this.dataSource.data];
   }
 
   closeMenu(){

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -14,6 +14,8 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatTableModule } from '@angular/material/table';
 import { AddMargin } from '../../../directive/add-margin';
 import { ServiceInventory } from '../../service-inventory/service-inventory';
+import { TypeUser } from '../../../yaml/home-table';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'role',
@@ -26,16 +28,29 @@ import { ServiceInventory } from '../../service-inventory/service-inventory';
 })
 export class Role {
 
-  constructor(public serviceInventory: ServiceInventory){
+  constructor(public serviceInventory: ServiceInventory, private router: Router){
     
   }
 
    loginForm = new FormGroup({
-    username: new FormControl(),
-    password: new FormControl()
+    username: new FormControl('', Validators.required),
+    password: new FormControl('', Validators.required)
   });
 
   login(){
     console.log("test")
+  }
+
+  inventoryRole(role: string){
+    switch (role) {
+      case TypeUser.ADMIN:
+        this.router.navigate(['/home', TypeUser.ADMIN])
+        break;
+    case TypeUser.WATCHER:
+       this.router.navigate(['/home', TypeUser.WATCHER])
+      break;
+      default:
+        break;
+    }
   }
 }

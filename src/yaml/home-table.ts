@@ -16,7 +16,7 @@ export interface Fields {
 }
 
 export interface AssetModel {
-  nome_modello?:string,
+  nomeModello?:string,
   campi?: Fields[],
 }
 
@@ -30,4 +30,9 @@ export enum MenuAction {
   CREATE_ASSET = 'createasset',
   CREATE_MODEL = 'createmodel',
   UPLOAD_JSON = 'uploadfile'
+}
+
+export enum TypeUser {
+  WATCHER = 'watcher', // può solo leggere
+  ADMIN = 'admin', // può fare tutto
 }

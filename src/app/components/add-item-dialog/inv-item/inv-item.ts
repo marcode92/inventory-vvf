@@ -16,6 +16,7 @@ import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { ServiceInventory } from '../../../service-inventory/service-inventory';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSelectModule } from '@angular/material/select';
+import { requiredTrim } from '../../../validators/required-trim.validators';
 
 @Component({
   selector: 'inv-item',
@@ -81,13 +82,12 @@ export class InvItem {
     return new FormGroup({
       nome_campo: new FormControl(nomeCampo, Validators.required),
       tipo_campo: new FormControl(tipoCampo, Validators.required),
-      valore: new FormControl<string | number | boolean | null>(value || '', Validators.required),
-
+      valore: new FormControl<string | number | boolean | null>(value || '', 
+        [Validators.required, requiredTrim]),
     })
   }
 
   addRow() {
-    //const ogg = this.modelloForm.get('fields') as FormArray
     this.fieldsEmptyCtrl.push(this.createField())
   }
 
